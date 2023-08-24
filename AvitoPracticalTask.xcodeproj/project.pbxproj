@@ -10,7 +10,6 @@
 		0EFB90142A97719D0010F255 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFB90132A97719D0010F255 /* AppDelegate.swift */; };
 		0EFB90162A97719D0010F255 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFB90152A97719D0010F255 /* SceneDelegate.swift */; };
 		0EFB90182A97719D0010F255 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFB90172A97719D0010F255 /* ViewController.swift */; };
-		0EFB901B2A97719D0010F255 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EFB90192A97719D0010F255 /* Main.storyboard */; };
 		0EFB901D2A97719F0010F255 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0EFB901C2A97719F0010F255 /* Assets.xcassets */; };
 		0EFB90202A97719F0010F255 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EFB901E2A97719F0010F255 /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
@@ -20,7 +19,6 @@
 		0EFB90132A97719D0010F255 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0EFB90152A97719D0010F255 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		0EFB90172A97719D0010F255 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		0EFB901A2A97719D0010F255 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		0EFB901C2A97719F0010F255 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0EFB901F2A97719F0010F255 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0EFB90212A97719F0010F255 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -56,15 +54,30 @@
 		0EFB90122A97719D0010F255 /* AvitoPracticalTask */ = {
 			isa = PBXGroup;
 			children = (
-				0EFB90132A97719D0010F255 /* AppDelegate.swift */,
-				0EFB90152A97719D0010F255 /* SceneDelegate.swift */,
-				0EFB90172A97719D0010F255 /* ViewController.swift */,
-				0EFB90192A97719D0010F255 /* Main.storyboard */,
+				0EFB90272A9772FE0010F255 /* Application */,
+				0EFB90282A97730E0010F255 /* Presentation */,
 				0EFB901C2A97719F0010F255 /* Assets.xcassets */,
 				0EFB901E2A97719F0010F255 /* LaunchScreen.storyboard */,
 				0EFB90212A97719F0010F255 /* Info.plist */,
 			);
 			path = AvitoPracticalTask;
+			sourceTree = "<group>";
+		};
+		0EFB90272A9772FE0010F255 /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				0EFB90132A97719D0010F255 /* AppDelegate.swift */,
+				0EFB90152A97719D0010F255 /* SceneDelegate.swift */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
+		0EFB90282A97730E0010F255 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				0EFB90172A97719D0010F255 /* ViewController.swift */,
+			);
+			path = Presentation;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -127,7 +140,6 @@
 			files = (
 				0EFB90202A97719F0010F255 /* LaunchScreen.storyboard in Resources */,
 				0EFB901D2A97719F0010F255 /* Assets.xcassets in Resources */,
-				0EFB901B2A97719D0010F255 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -147,14 +159,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		0EFB90192A97719D0010F255 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				0EFB901A2A97719D0010F255 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		0EFB901E2A97719F0010F255 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -292,9 +296,8 @@
 				INFOPLIST_FILE = AvitoPracticalTask/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -302,9 +305,12 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "vardant-it.AvitoPracticalTask";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -320,9 +326,8 @@
 				INFOPLIST_FILE = AvitoPracticalTask/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -330,9 +335,12 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "vardant-it.AvitoPracticalTask";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
