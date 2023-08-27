@@ -22,8 +22,10 @@ final class SkeletonCell: UICollectionViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         layer.cornerRadius = 10
+    }
+
+    func configure() {
         contentView.addGradientLayer()
-        
     }
     
     required init?(coder: NSCoder) {

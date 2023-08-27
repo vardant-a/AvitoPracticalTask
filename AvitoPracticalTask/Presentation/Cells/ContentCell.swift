@@ -63,7 +63,7 @@ final class ContentCell: UICollectionViewCell {
 
     // MARK: - Public Methods
 
-    func configure(_ model: TestModel) {
+    func configure(_ model: Advertisement) {
         contentTitleLabel.text = model.title
     }
 

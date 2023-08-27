@@ -9,6 +9,7 @@ import UIKit
 
 protocol FirstViewProtocol: AnyObject {
     func updateContent()
+    func showAlert()
 }
 
 final class FirstViewController: UIViewController {
@@ -62,7 +63,7 @@ final class FirstViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .orange
         view.addSubviewsDeactivateAutoMask(contentCollectionView)
-        presenter.startLoading()
+        presenter.getContent()
     }
     
     override func viewDidLayoutSubviews() {
@@ -98,7 +99,11 @@ final class FirstViewController: UIViewController {
 
 extension FirstViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        30
+        if !presenter.loading {
+           return presenter.content.count
+        } else {
+            return 20
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -108,8 +113,8 @@ extension FirstViewController: UICollectionViewDataSource {
                 for: indexPath) as? ContentCell else {
                 return UICollectionViewCell()
             }
-            
-            cell.configure(TestModel(title: "\(indexPath.row + 1)"))
+            let content = presenter.content[indexPath.row]
+            cell.configure(content)
             
             return cell
         } else {
@@ -118,7 +123,8 @@ extension FirstViewController: UICollectionViewDataSource {
                 for: indexPath) as? SkeletonCell else {
                 return UICollectionViewCell()
             }
-            
+            cell.configure()
+
             return cell
         }
     }
@@ -158,5 +164,9 @@ extension FirstViewController: FirstViewProtocol {
         DispatchQueue.main.async {
             self.contentCollectionView.reloadData()
         }
+    }
+
+    func showAlert() {
+        print("Error")
     }
 }
