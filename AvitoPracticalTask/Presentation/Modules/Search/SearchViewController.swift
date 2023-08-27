@@ -1,5 +1,5 @@
 //
-//  FirstViewController.swift
+//  SearchViewController.swift
 //  AvitoPracticalTask
 //
 //  Created by Aleksei on 24.08.2023.
@@ -7,16 +7,16 @@
 
 import UIKit
 
-protocol FirstViewProtocol: AnyObject {
+protocol SearchViewProtocol: AnyObject {
     func updateContent()
     func showAlert()
+    func transition(to: UIViewController)
 }
 
-final class FirstViewController: UIViewController {
-
+final class SearchViewController: UIViewController {
     // MARK: - Private Properties
 
-    private let presenter: FirstViewPresenter
+    private let presenter: SearchViewPresenter
 
     private let collectionLayout: UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
@@ -48,7 +48,7 @@ final class FirstViewController: UIViewController {
 
     // MARK: - Init
 
-    init(presenter: FirstViewPresenter) {
+    init(presenter: SearchViewPresenter) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
     }
@@ -97,7 +97,7 @@ final class FirstViewController: UIViewController {
 
     // MARK: - UICollectionViewDataSource
 
-extension FirstViewController: UICollectionViewDataSource {
+extension SearchViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if !presenter.loading {
            return presenter.content.count
@@ -132,15 +132,16 @@ extension FirstViewController: UICollectionViewDataSource {
 
     // MARK: - UICollectionViewDelegate
 
-extension FirstViewController: UICollectionViewDelegate {
+extension SearchViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("\(indexPath.row + 1)")
+        presenter.configureDetailView()
     }
 }
 
     // MARK: - UICollectionViewDelegateFlowLayout
 
-extension FirstViewController: UICollectionViewDelegateFlowLayout {
+extension SearchViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let offsets = LocalConstants.horizontalOffset * 2 + LocalConstants.horizontalOffset / 2
         return CGSize(
@@ -159,7 +160,7 @@ extension FirstViewController: UICollectionViewDelegateFlowLayout {
 
     // MARK: - FirstViewProtocol
 
-extension FirstViewController: FirstViewProtocol {
+extension SearchViewController: SearchViewProtocol {
     func updateContent() {
         DispatchQueue.main.async {
             self.contentCollectionView.reloadData()
@@ -168,5 +169,9 @@ extension FirstViewController: FirstViewProtocol {
 
     func showAlert() {
         print("Error")
+    }
+
+    func transition(to: UIViewController) {
+        navigationController?.pushViewController(to, animated: true)
     }
 }
