@@ -32,6 +32,6 @@ final class DetailPresenter {
 
 extension DetailPresenter: DetailViewPresenter {
     func showContent() {
-        view?.update()
+        view?.showContent(Advertisement(title: "Hello this first item"))
     }
 }
