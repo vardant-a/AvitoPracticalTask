@@ -41,7 +41,7 @@ final class SearchViewController: UIViewController {
         collectionView.register(
             ContentCell.self,
             forCellWithReuseIdentifier: ContentCell.cellID)
-        collectionView.backgroundColor = .white
+        collectionView.backgroundColor = .clear
 
         return collectionView
     }()
@@ -61,7 +61,7 @@ final class SearchViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .orange
+        view.backgroundColor = ColorSet.backgroundColor
         view.addSubviewsDeactivateAutoMask(contentCollectionView)
         presenter.getContent()
     }
@@ -82,16 +82,8 @@ final class SearchViewController: UIViewController {
             contentCollectionView.trailingAnchor.constraint(
                 equalTo: view.trailingAnchor),
             contentCollectionView.bottomAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.bottomAnchor,
-                constant: -LocalConstants.verticalOffset),
+                equalTo: view.safeAreaLayoutGuide.bottomAnchor),
         ])
-    }
-    
-    // MARK: - LocalConstants
-
-    private enum LocalConstants {
-        static let verticalOffset: CGFloat = 20
-        static let horizontalOffset: CGFloat = 16
     }
 }
 
@@ -143,7 +135,7 @@ extension SearchViewController: UICollectionViewDelegate {
 
 extension SearchViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let offsets = LocalConstants.horizontalOffset * 2 + LocalConstants.horizontalOffset / 2
+        let offsets = Constants.horizontalOffset * 2 + Constants.horizontalOffset / 2
         return CGSize(
             width: (collectionView.frame.size.width - offsets) / 2,
             height: collectionView.frame.size.height / 2.5)
@@ -151,10 +143,10 @@ extension SearchViewController: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(
-            top: LocalConstants.horizontalOffset / 2,
-            left: LocalConstants.horizontalOffset,
-            bottom: LocalConstants.horizontalOffset / 2,
-            right: LocalConstants.horizontalOffset)
+            top: Constants.horizontalOffset / 2,
+            left: Constants.horizontalOffset,
+            bottom: Constants.horizontalOffset / 2,
+            right: Constants.horizontalOffset)
     }
 }
 
@@ -171,7 +163,7 @@ extension SearchViewController: SearchViewProtocol {
         print("Error")
     }
 
-    func transition(to: UIViewController) {
-        navigationController?.pushViewController(to, animated: true)
+    func transition(to view: UIViewController) {
+        navigationController?.pushViewController(view, animated: true)
     }
 }

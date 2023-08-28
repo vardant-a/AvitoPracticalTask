@@ -73,7 +73,7 @@ final class DetailViewController: UIViewController {
         configureNavigationBar()
         priceDetailLabel.text = "5 000 RUB"
         detailTitleLabel.text = "Low Title for GradientLayer"
-        view?.backgroundColor = .darkGray
+        view.backgroundColor =  ColorSet.backgroundColor
         view.addSubviewsDeactivateAutoMask(
             contentStackView, callButton, writeButton)
     }
@@ -96,9 +96,9 @@ final class DetailViewController: UIViewController {
     // MARK: - Private Methods
 
     private func configureNavigationBar() {
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "<-", style: .plain, target: self, action: #selector(tuppedBackButton))
         let shareButton = UIBarButtonItem(title: "Share", style: .plain, target: self, action: #selector(tuppedShareButton))
-        let favoriteItemButton = UIBarButtonItem(title: "favorite", style: .plain, target: self, action: #selector(tuppedFavoriteButton))
-        navigationItem.rightBarButtonItems = [favoriteItemButton, shareButton]
+        navigationItem.rightBarButtonItem = shareButton
     }
 
     // MARK: - @Objc Methods
@@ -115,8 +115,8 @@ final class DetailViewController: UIViewController {
         print("Share")
     }
 
-    @objc private func tuppedFavoriteButton() {
-        print("favorite")
+    @objc private func tuppedBackButton() {
+        navigationController?.popViewController(animated: true)
     }
 
     // MARK: - Layout

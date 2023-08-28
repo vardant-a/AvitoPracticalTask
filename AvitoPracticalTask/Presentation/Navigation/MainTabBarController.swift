@@ -9,6 +9,8 @@ import UIKit
 
 final class MainTabBarController: UITabBarController {
 
+    // MARK: - Private Properties
+
     private var searchController: SearchViewController = {
         let networkService = RequestManager()
         let presenter = SearchPresenter(networkService: networkService)
@@ -23,20 +25,35 @@ final class MainTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureTabBar()
+        setupTabBarAppearance()
     }
 
     // MARK: - Private Methods
 
-    private func configureTab(_ view: UIViewController, title: String) -> UINavigationController {
-        let controller = UINavigationController(rootViewController: view)
-        controller.tabBarItem = UITabBarItem(title: title, image: nil, selectedImage: nil)
+    private func configureTab(_ view: UIViewController, title: String, image: UIImage?, tag: Int) -> UINavigationController {
+        let controller = MainNavigationController(rootViewController: view)
+        controller.tabBarItem = UITabBarItem(
+            title: title,
+            image: image,
+            tag: tag)
         
         return controller
     }
 
     private func configureTabBar() {
-        let searchTab = configureTab(searchController, title: "Search")
+        let searchTab = configureTab(
+            searchController,
+            title: "Search",
+            image: ImageSet.searchTabBarItem,
+            tag: 0)
         
         viewControllers = [searchTab]
+    }
+
+    private func setupTabBarAppearance() {
+        let tabBarAppearance = UITabBar.appearance()
+        tabBarAppearance.tintColor = .white
+        tabBarAppearance.barTintColor = ColorSet.tabBarColor
+        tabBarAppearance.backgroundColor = ColorSet.tabBarColor
     }
 }
