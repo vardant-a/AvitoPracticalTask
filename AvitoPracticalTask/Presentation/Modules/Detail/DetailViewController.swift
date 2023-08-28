@@ -25,11 +25,22 @@ final class DetailViewController: UIViewController {
         return imageView
     }()
 
-    
+    private var priceDetailLabel = StandardLabel(.heightTitle)
     private var detailTitleLabel = StandardLabel(.heightTitle)
 
     // MARK: - Private lazy Properties
 
+    private lazy var contentStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [
+            detailImageView, priceDetailLabel, detailTitleLabel
+        ])
+        stackView.axis = .vertical
+        stackView.spacing = 8
+        stackView.distribution = .fill
+    
+        return stackView
+    }()
+    
     private lazy var callButton = StandardButton(
         self,
         title: "Call",
@@ -59,11 +70,12 @@ final class DetailViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureNavigationBar()
+        priceDetailLabel.text = "5 000 RUB"
         detailTitleLabel.text = "Low Title for GradientLayer"
-        view?.backgroundColor = .white
+        view?.backgroundColor = .darkGray
         view.addSubviewsDeactivateAutoMask(
-            detailImageView, detailTitleLabel, callButton, writeButton)
-        
+            contentStackView, callButton, writeButton)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -79,8 +91,14 @@ final class DetailViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         setupLayout()
-        detailImageView.addGradientLayer()
-        detailTitleLabel.addGradientLayer()
+    }
+
+    // MARK: - Private Methods
+
+    private func configureNavigationBar() {
+        let shareButton = UIBarButtonItem(title: "Share", style: .plain, target: self, action: #selector(tuppedShareButton))
+        let favoriteItemButton = UIBarButtonItem(title: "favorite", style: .plain, target: self, action: #selector(tuppedFavoriteButton))
+        navigationItem.rightBarButtonItems = [favoriteItemButton, shareButton]
     }
 
     // MARK: - @Objc Methods
@@ -93,66 +111,58 @@ final class DetailViewController: UIViewController {
         print("Write")
     }
 
+    @objc private func tuppedShareButton() {
+        print("Share")
+    }
+
+    @objc private func tuppedFavoriteButton() {
+        print("favorite")
+    }
+
     // MARK: - Layout
 
     private func setupLayout() {
         NSLayoutConstraint.activate([
-            detailImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            detailImageView.leadingAnchor.constraint(
+            contentStackView.topAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.topAnchor),
+            contentStackView.leadingAnchor.constraint(
                 equalTo: view.leadingAnchor),
-            detailImageView.trailingAnchor.constraint(
-                equalTo: view.trailingAnchor),
-            detailImageView.heightAnchor.constraint(
-                equalToConstant: 300)
+            contentStackView.trailingAnchor.constraint(
+                equalTo: view.trailingAnchor)
         ])
-
+////    
+//        NSLayoutConstraint.activate([
+//            detailImageView.widthAnchor.constraint(equalToConstant: contentStackView.frame.width),
+//            detailImageView.heightAnchor.constraint(equalToConstant: 200)
+//        ])
+        
+//        setupConstraintForStackViewSubview(priceDetailLabel)
+//        setupConstraintForStackViewSubview(detailTitleLabel)
+        
         NSLayoutConstraint.activate([
             callButton.bottomAnchor.constraint(
                 equalTo: view.safeAreaLayoutGuide.bottomAnchor,
                 constant: -20),
-            callButton.leadingAnchor.constraint(
-                equalTo: view.leadingAnchor,
-                constant: 16),
-            callButton.trailingAnchor.constraint(
-                equalTo: view.centerXAnchor,
-                constant: -8)
+            callButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            callButton.trailingAnchor.constraint(equalTo: view.centerXAnchor, constant: -8)
         ])
-        
+    
         NSLayoutConstraint.activate([
             writeButton.bottomAnchor.constraint(
                 equalTo: view.safeAreaLayoutGuide.bottomAnchor,
                 constant: -20),
-            writeButton.leadingAnchor.constraint(
-                equalTo: view.centerXAnchor,
-                constant: 8),
-            writeButton.trailingAnchor.constraint(
-                equalTo: view.trailingAnchor,
-                constant: -16)
-        ])
-
-        NSLayoutConstraint.activate([
-            detailTitleLabel.topAnchor.constraint(
-                equalTo: detailImageView.bottomAnchor,
-                constant: 8),
-            detailTitleLabel.leadingAnchor.constraint(
-                equalTo: view.leadingAnchor,
-                constant: 16),
-            detailTitleLabel.trailingAnchor.constraint(
-                equalTo: view.trailingAnchor,
-                constant: -16)
+            writeButton.leadingAnchor.constraint(equalTo: view.centerXAnchor, constant: 8),
+            writeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
         ])
     }
 
-    private func test() {
+    private func setupConstraintForStackViewSubview(_ subview: UIView) {
         NSLayoutConstraint.activate([
-            detailTitleLabel.topAnchor.constraint(
-                equalTo: detailImageView.bottomAnchor,
-                constant: 8),
-            detailTitleLabel.leadingAnchor.constraint(
-                equalTo: view.leadingAnchor,
+            subview.leadingAnchor.constraint(
+                equalTo: contentStackView.leadingAnchor,
                 constant: 16),
-            detailTitleLabel.trailingAnchor.constraint(
-                equalTo: view.trailingAnchor,
+            subview.trailingAnchor.constraint(
+                equalTo: contentStackView.trailingAnchor,
                 constant: -16)
         ])
     }
@@ -173,7 +183,9 @@ extension DetailViewController: DetailViewProtocol {
 struct DetialControllerProvider: PreviewProvider {
     static var previews: some View {
         ViewControllerPreview {
-            DetailViewController(presenter: DetailPresenter())
+            UINavigationController(
+                rootViewController: DetailViewController(
+                    presenter: DetailPresenter()))
         }
         .edgesIgnoringSafeArea(.all)
     }

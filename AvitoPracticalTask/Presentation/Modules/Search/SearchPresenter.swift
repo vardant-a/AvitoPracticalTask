@@ -11,7 +11,7 @@ protocol SearchViewPresenter: AnyObject {
     var loading: Bool { get }
     var content: [Advertisement] { get }
 
-    init(networkService: NetworkService)
+    init(networkService: RequestManager)
 
     func inject(view: SearchViewProtocol?)
     func getContent()
@@ -23,7 +23,7 @@ final class SearchPresenter {
 
     private weak var view: SearchViewProtocol?
     
-    private let networkService: NetworkService
+    private let networkService: RequestManager
     
     private var loadingStatus = true
 
@@ -31,30 +31,26 @@ final class SearchPresenter {
 
     // MARK: - Init
     
-    required init(networkService: NetworkService) {
+    required init(networkService: RequestManager) {
         self.networkService = networkService
     }
 
     // MARK: - Private Methods
 
     private func fetch() {
-        let networkService = NetworkService()
         Task {
-           let networkData = await networkService.fetch(
-                Request(),
-                model: AdvertisementsResponse.self)
+            let networkData = await networkService.fetchAllData()
             switch networkData {
             case .success(let success):
                 guard let advertisements = success.advertisements else { return }
                 dataSource = advertisements
                 loadingStatus = false
                 view?.updateContent()
-            case .failure( _):
+            case .failure(_):
                 view?.showAlert()
             }
         }
     }
-    
 }
 
 extension SearchPresenter: SearchViewPresenter {

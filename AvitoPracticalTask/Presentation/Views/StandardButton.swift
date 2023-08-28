@@ -19,24 +19,19 @@ final class StandardButton: UIButton {
         setTitleColor(titleColor, for: .normal)
         backgroundColor = buttonColor
         addTarget(target, action: action, for: .touchUpInside)
-        layer.cornerRadius = 10
+        
     }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
     }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        layer.cornerRadius = 10
+    }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    // MARK: - Private Methods
-
-    // MARK: - Layout
-
-    private func setupLayout() {
-        NSLayoutConstraint.activate([
-            heightAnchor.constraint(equalToConstant: 44)
-        ])
     }
 }
