@@ -9,10 +9,10 @@ import UIKit
 
 final class MainTabBarController: UITabBarController {
 
-    private var searchController: FirstViewController = {
-        let networkService = NetworkService()
-        let presenter = FirstPresenter(networkService: networkService)
-        let searchController = FirstViewController(presenter: presenter)
+    private var searchController: SearchViewController = {
+        let networkService = RequestManager()
+        let presenter = SearchPresenter(networkService: networkService)
+        let searchController = SearchViewController(presenter: presenter)
         presenter.inject(view: searchController)
     
         return searchController
