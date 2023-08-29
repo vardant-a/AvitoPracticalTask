@@ -69,7 +69,7 @@ final class ContentCell: UICollectionViewCell {
         contentTitleLabel.text = model.title
         Task {
             guard let imageUrl = model.imageUrl else { return }
-            let result = await RequestManager().fetchImage(imageUrl)
+            let result = await NetworkManager().fetchImage(imageUrl)
             switch result {
             case .success(let success):
                 contentImageView.image = UIImage(data: success)

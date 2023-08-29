@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 protocol DetailViewPresenter: AnyObject {
-    init(itemId: String, networkService: RequestManager)
+    init(itemId: String, networkService: NetworkManager)
     
     func inject(view: DetailViewProtocol)
     func showContent()
@@ -21,13 +21,13 @@ final class DetailPresenter {
 
     private weak var view: DetailViewProtocol?
     
-    private let networkService: RequestManager
+    private let networkService: NetworkManager
 
     private let itemId: String
 
     // MARK: - Init
 
-    required init(itemId: String, networkService: RequestManager) {
+    required init(itemId: String, networkService: NetworkManager) {
         self.itemId = itemId
         self.networkService = networkService
     }
@@ -67,7 +67,7 @@ extension DetailPresenter: DetailViewPresenter {
     
     private func getImage(_ model: Advertisement?) async -> UIImage? {
             guard let imageUrl = model?.imageUrl else { return nil }
-            let result = await RequestManager().fetchImage(imageUrl)
+            let result = await NetworkManager().fetchImage(imageUrl)
             switch result {
             case .success(let success):
                 return UIImage(data: success)

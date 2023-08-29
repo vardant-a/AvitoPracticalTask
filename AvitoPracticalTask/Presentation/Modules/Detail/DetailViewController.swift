@@ -193,7 +193,7 @@ struct DetialControllerProvider: PreviewProvider {
                 rootViewController: DetailViewController(
                     presenter: DetailPresenter(
                         itemId: "2",
-                        networkService: RequestManager())))
+                        networkService: NetworkManager())))
         }
         .edgesIgnoringSafeArea(.all)
     }

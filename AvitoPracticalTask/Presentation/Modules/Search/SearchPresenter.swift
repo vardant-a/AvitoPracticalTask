@@ -11,7 +11,7 @@ protocol SearchViewPresenter: AnyObject {
     var loading: Bool { get }
     var content: [Advertisement] { get }
 
-    init(networkService: RequestManager)
+    init(networkService: NetworkManager)
 
     func inject(view: SearchViewProtocol?)
     func getContent()
@@ -23,7 +23,7 @@ final class SearchPresenter {
 
     private weak var view: SearchViewProtocol?
     
-    private let networkService: RequestManager
+    private let networkService: NetworkManager
     
     private var loadingStatus = true
 
@@ -31,7 +31,7 @@ final class SearchPresenter {
 
     // MARK: - Init
     
-    required init(networkService: RequestManager) {
+    required init(networkService: NetworkManager) {
         self.networkService = networkService
     }
 

@@ -12,7 +12,7 @@ final class MainTabBarController: UITabBarController {
     // MARK: - Private Properties
 
     private var searchController: SearchViewController = {
-        let networkService = RequestManager()
+        let networkService = NetworkManager()
         let presenter = SearchPresenter(networkService: networkService)
         let searchController = SearchViewController(presenter: presenter)
         presenter.inject(view: searchController)
