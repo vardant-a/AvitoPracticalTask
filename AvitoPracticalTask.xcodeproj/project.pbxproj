@@ -100,7 +100,6 @@
 		0E908D572A9947CE0006549A /* NetworkLayer */ = {
 			isa = PBXGroup;
 			children = (
-				0E908D5A2A995C230006549A /* Model */,
 				0E908D582A9947E50006549A /* NetworkService.swift */,
 				0E0EC0E92A9BE726009E5B3C /* EndPoint.swift */,
 				0E0EC0EB2A9BE86B009E5B3C /* RequestError.swift */,
@@ -174,6 +173,7 @@
 			children = (
 				0EFB90272A9772FE0010F255 /* Application */,
 				0E908D572A9947CE0006549A /* NetworkLayer */,
+				0E908D5A2A995C230006549A /* Model */,
 				0EFB90282A97730E0010F255 /* Presentation */,
 				0E4CB14B2A9D36A000E19AE7 /* Resources */,
 				0EFB90212A97719F0010F255 /* Info.plist */,

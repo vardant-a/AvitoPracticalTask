@@ -8,8 +8,7 @@
 import SwiftUI
 
 protocol DetailViewProtocol: AnyObject {
-    func update(_ image: UIImage?)
-    func showContent(_ model: Advertisement)
+    func update(_ image: UIImage?, title: String, price: String)
 }
 
 final class DetailViewController: UIViewController {
@@ -178,17 +177,11 @@ final class DetailViewController: UIViewController {
     // MARK: - DetailViewProtocol
 
 extension DetailViewController: DetailViewProtocol {
-    func update(_ image: UIImage?) {
-        print("update")
+    func update(_ image: UIImage?, title: String, price: String) {
         DispatchQueue.main.async {
             self.detailImageView.image = image
-        }
-    }
-    
-    func showContent(_ model: Advertisement) {
-        DispatchQueue.main.async {
-            self.detailTitleLabel.text = model.title
-            self.priceDetailLabel.text = model.price
+            self.detailTitleLabel.text = title
+            self.priceDetailLabel.text = price
         }
     }
 }

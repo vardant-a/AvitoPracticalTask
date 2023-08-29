@@ -25,8 +25,6 @@ final class DetailPresenter {
 
     private let itemId: String
 
-    private var model: Advertisement?
-
     // MARK: - Init
 
     required init(itemId: String, networkService: RequestManager) {
@@ -57,25 +55,24 @@ extension DetailPresenter: DetailViewPresenter {
             let networkResult = await networkService.fetchDetails(itemId: itemId)
             switch networkResult {
             case .success(let success):
-                view?.showContent(success)
-                model = success
-                getImage(model)
+                await view?.update(
+                    getImage(success),
+                    title: success.title ?? "title",
+                    price: success.price ?? "1")
             case .failure(_):
                 print("1")
             }
         }
     }
     
-    private func getImage(_ model: Advertisement?) {
-        Task {
-            guard let imageUrl = self.model?.imageUrl else { return }
+    private func getImage(_ model: Advertisement?) async -> UIImage? {
+            guard let imageUrl = model?.imageUrl else { return nil }
             let result = await RequestManager().fetchImage(imageUrl)
             switch result {
             case .success(let success):
-                view?.update(UIImage(data: success))
+                return UIImage(data: success)
             case .failure(_):
-                print("1")
+                return nil
             }
-        }
     }
 }
