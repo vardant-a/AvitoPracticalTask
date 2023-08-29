@@ -42,7 +42,7 @@ final class StandardLabel: UILabel {
 
     // MARK: - Private Methods
 
-    private func configure(font: UIFont? = UIFont.systemFont(ofSize: 17), andColor: UIColor? = .black) {
+    private func configure(font: UIFont? = UIFont.systemFont(ofSize: 17), andColor: UIColor? = ColorSet.acceptColor) {
         self.font = font
         textColor = andColor
     }

@@ -115,7 +115,6 @@ extension SearchViewController: UICollectionViewDataSource {
                 for: indexPath) as? SkeletonCell else {
                 return UICollectionViewCell()
             }
-            cell.configure()
 
             return cell
         }
@@ -126,8 +125,10 @@ extension SearchViewController: UICollectionViewDataSource {
 
 extension SearchViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("\(indexPath.row + 1)")
-        presenter.configureDetailView()
+        if !presenter.loading {
+            guard let  itemId = presenter.content[indexPath.row].id else { return }
+            presenter.configureDetailView(itemId)
+        }
     }
 }
 

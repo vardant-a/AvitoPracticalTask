@@ -8,7 +8,7 @@
 import SwiftUI
 
 protocol DetailViewProtocol: AnyObject {
-    func update()
+    func update(_ image: UIImage?)
     func showContent(_ model: Advertisement)
 }
 
@@ -21,6 +21,8 @@ final class DetailViewController: UIViewController {
     private var detailImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.backgroundColor = .red
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
     
         return imageView
     }()
@@ -29,17 +31,6 @@ final class DetailViewController: UIViewController {
     private var detailTitleLabel = StandardLabel(.heightTitle)
 
     // MARK: - Private lazy Properties
-
-    private lazy var contentStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [
-            detailImageView, priceDetailLabel, detailTitleLabel
-        ])
-        stackView.axis = .vertical
-        stackView.spacing = 8
-        stackView.distribution = .fill
-    
-        return stackView
-    }()
     
     private lazy var callButton = StandardButton(
         self,
@@ -71,11 +62,14 @@ final class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavigationBar()
-        priceDetailLabel.text = "5 000 RUB"
-        detailTitleLabel.text = "Low Title for GradientLayer"
+        priceDetailLabel.text = "Price"
+        detailTitleLabel.text = "Title"
+        detailTitleLabel.numberOfLines = 2
         view.backgroundColor =  ColorSet.backgroundColor
         view.addSubviewsDeactivateAutoMask(
-            contentStackView, callButton, writeButton)
+            detailImageView, priceDetailLabel, detailTitleLabel,
+            callButton, writeButton)
+        presenter.showContent()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -96,19 +90,26 @@ final class DetailViewController: UIViewController {
     // MARK: - Private Methods
 
     private func configureNavigationBar() {
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "<-", style: .plain, target: self, action: #selector(tuppedBackButton))
-        let shareButton = UIBarButtonItem(title: "Share", style: .plain, target: self, action: #selector(tuppedShareButton))
-        navigationItem.rightBarButtonItem = shareButton
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            image: ImageSet.backArrow,
+            style: .plain,
+            target: self,
+            action: #selector(tuppedBackButton))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            image: ImageSet.share,
+            style: .plain,
+            target: self,
+            action: #selector(tuppedShareButton))
     }
 
     // MARK: - @Objc Methods
 
     @objc private func tuppedCallButton() {
-        presenter.showContent()
+        presenter.call()
     }
 
     @objc private func tuppedWriteButton() {
-        print("Write")
+        print("write")
     }
 
     @objc private func tuppedShareButton() {
@@ -123,47 +124,53 @@ final class DetailViewController: UIViewController {
 
     private func setupLayout() {
         NSLayoutConstraint.activate([
-            contentStackView.topAnchor.constraint(
+            detailImageView.topAnchor.constraint(
                 equalTo: view.safeAreaLayoutGuide.topAnchor),
-            contentStackView.leadingAnchor.constraint(
+            detailImageView.leadingAnchor.constraint(
                 equalTo: view.leadingAnchor),
-            contentStackView.trailingAnchor.constraint(
-                equalTo: view.trailingAnchor)
-        ])
-////    
-//        NSLayoutConstraint.activate([
-//            detailImageView.widthAnchor.constraint(equalToConstant: contentStackView.frame.width),
-//            detailImageView.heightAnchor.constraint(equalToConstant: 200)
-//        ])
-        
-//        setupConstraintForStackViewSubview(priceDetailLabel)
-//        setupConstraintForStackViewSubview(detailTitleLabel)
-        
-        NSLayoutConstraint.activate([
+            detailImageView.trailingAnchor.constraint(
+                equalTo: view.trailingAnchor),
+            detailImageView.heightAnchor.constraint(
+                equalToConstant: 330),
+            
+            priceDetailLabel.topAnchor.constraint(
+                equalTo: detailImageView.bottomAnchor,
+                constant: Constants.verticalOffset / 2),
+            priceDetailLabel.leadingAnchor.constraint(
+                equalTo: view.leadingAnchor,
+                constant: Constants.horizontalOffset),
+            priceDetailLabel.trailingAnchor.constraint(
+                equalTo: view.trailingAnchor,
+                constant: -Constants.horizontalOffset),
+            detailTitleLabel.topAnchor.constraint(
+                equalTo: priceDetailLabel.bottomAnchor,
+                constant: Constants.verticalOffset / 2),
+            detailTitleLabel.leadingAnchor.constraint(
+                equalTo: view.leadingAnchor,
+                constant: Constants.horizontalOffset),
+            detailTitleLabel.trailingAnchor.constraint(
+                equalTo: view.trailingAnchor,
+                constant: -Constants.horizontalOffset),
+            
             callButton.bottomAnchor.constraint(
                 equalTo: view.safeAreaLayoutGuide.bottomAnchor,
-                constant: -20),
-            callButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            callButton.trailingAnchor.constraint(equalTo: view.centerXAnchor, constant: -8)
-        ])
-    
-        NSLayoutConstraint.activate([
+                constant: -Constants.verticalOffset),
+            callButton.leadingAnchor.constraint(
+                equalTo: view.leadingAnchor,
+                constant: Constants.horizontalOffset),
+            callButton.trailingAnchor.constraint(
+                equalTo: view.centerXAnchor,
+                constant: -Constants.horizontalOffset / 2),
+            
             writeButton.bottomAnchor.constraint(
                 equalTo: view.safeAreaLayoutGuide.bottomAnchor,
-                constant: -20),
-            writeButton.leadingAnchor.constraint(equalTo: view.centerXAnchor, constant: 8),
-            writeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
-        ])
-    }
-
-    private func setupConstraintForStackViewSubview(_ subview: UIView) {
-        NSLayoutConstraint.activate([
-            subview.leadingAnchor.constraint(
-                equalTo: contentStackView.leadingAnchor,
-                constant: 16),
-            subview.trailingAnchor.constraint(
-                equalTo: contentStackView.trailingAnchor,
-                constant: -16)
+                constant: -Constants.verticalOffset),
+            writeButton.leadingAnchor.constraint(
+                equalTo: view.centerXAnchor,
+                constant: Constants.horizontalOffset / 2),
+            writeButton.trailingAnchor.constraint(
+                equalTo: view.trailingAnchor,
+                constant: -Constants.horizontalOffset)
         ])
     }
 }
@@ -171,12 +178,18 @@ final class DetailViewController: UIViewController {
     // MARK: - DetailViewProtocol
 
 extension DetailViewController: DetailViewProtocol {
-    func update() {
+    func update(_ image: UIImage?) {
         print("update")
+        DispatchQueue.main.async {
+            self.detailImageView.image = image
+        }
     }
     
     func showContent(_ model: Advertisement) {
-        detailTitleLabel.text = model.title
+        DispatchQueue.main.async {
+            self.detailTitleLabel.text = model.title
+            self.priceDetailLabel.text = model.price
+        }
     }
 }
 
@@ -185,7 +198,9 @@ struct DetialControllerProvider: PreviewProvider {
         ViewControllerPreview {
             UINavigationController(
                 rootViewController: DetailViewController(
-                    presenter: DetailPresenter()))
+                    presenter: DetailPresenter(
+                        itemId: "2",
+                        networkService: RequestManager())))
         }
         .edgesIgnoringSafeArea(.all)
     }

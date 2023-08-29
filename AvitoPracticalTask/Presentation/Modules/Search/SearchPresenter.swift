@@ -15,7 +15,7 @@ protocol SearchViewPresenter: AnyObject {
 
     func inject(view: SearchViewProtocol?)
     func getContent()
-    func configureDetailView()
+    func configureDetailView(_ itemId: String)
 }
 
 final class SearchPresenter {
@@ -69,13 +69,15 @@ extension SearchPresenter: SearchViewPresenter {
     }
     
     func getContent() {
-        Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { _ in
+        Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { _ in
             self.fetch()
         }
     }
 
-    func configureDetailView() {
-        let presenter = DetailPresenter()
+    func configureDetailView(_ itemId: String) {
+        let presenter = DetailPresenter(
+            itemId: itemId,
+            networkService: networkService)
         let controller = DetailViewController(presenter: presenter)
         presenter.inject(view: controller)
         view?.transition(to: controller)

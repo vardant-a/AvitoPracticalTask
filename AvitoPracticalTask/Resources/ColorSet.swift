@@ -18,9 +18,25 @@ enum ColorSet {
 
     static var backgroundColor = UIColor { trait in
         if trait.userInterfaceStyle == .dark {
-            return UIColor.black
+            return UIColor.init(hexString: "#000000")
         } else {
+            return UIColor.init(hexString: "#F2F2F7")
+        }
+    }
+
+    static var tabBarItem = UIColor { trait in
+        if trait.userInterfaceStyle == .dark {
+            return UIColor.systemOrange
+        } else {
+            return UIColor.systemBlue
+        }
+    }
+    
+    static var acceptColor = UIColor { trait in
+        if trait.userInterfaceStyle == .dark {
             return UIColor.white
+        } else {
+            return UIColor.black
         }
     }
 }

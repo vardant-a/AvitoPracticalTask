@@ -10,7 +10,6 @@ import UIKit
 enum EndPointForRequest {
     case getAllItems
     case getDetails(itemId: String)
-//    case getImage(itemId: String)
 }
 
 extension EndPointForRequest: EndPoint {

@@ -12,23 +12,46 @@ final class SkeletonCell: UICollectionViewCell {
 
     static let cellID = "SkeletonCell"
     
+    private let skeletonImageView = UIView()
+    
     // MARK: - Init
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .black
+        backgroundColor = ColorSet.tabBarColor
+        skeletonImageView.backgroundColor = .red
+        contentView.addSubviewsDeactivateAutoMask(skeletonImageView)
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        skeletonImageView.addGradientLayer()
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        layer.cornerRadius = 10
-    }
-
-    func configure() {
-        contentView.addGradientLayer()
+        setupLayout()
+        layer.cornerRadius = Constants.cornerRadius
+        skeletonImageView.layer.cornerRadius = Constants.cornerRadius
+        skeletonImageView.addGradientLayer()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    // MARK: - Layout
+
+    private func setupLayout() {
+        NSLayoutConstraint.activate([
+            skeletonImageView.topAnchor.constraint(
+                equalTo: contentView.topAnchor),
+            skeletonImageView.leadingAnchor.constraint(
+                equalTo: contentView.leadingAnchor),
+            skeletonImageView.trailingAnchor.constraint(
+                equalTo: contentView.trailingAnchor),
+            skeletonImageView.heightAnchor.constraint(
+                equalToConstant: 200)
+        ])
     }
 }

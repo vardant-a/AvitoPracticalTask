@@ -52,7 +52,7 @@ final class MainTabBarController: UITabBarController {
 
     private func setupTabBarAppearance() {
         let tabBarAppearance = UITabBar.appearance()
-        tabBarAppearance.tintColor = .white
+        tabBarAppearance.tintColor = ColorSet.tabBarItem
         tabBarAppearance.barTintColor = ColorSet.tabBarColor
         tabBarAppearance.backgroundColor = ColorSet.tabBarColor
     }

@@ -34,13 +34,13 @@ final class MainNavigationController: UINavigationController {
         navBarAppearance.backgroundColor = ColorSet.backgroundColor
         navBarAppearance.shadowColor = .clear
         navBarAppearance.titleTextAttributes = [
-            .foregroundColor: UIColor.green]
+            .foregroundColor: ColorSet.acceptColor]
         navBarAppearance.largeTitleTextAttributes = [
-            .foregroundColor: UIColor.orange]
-//
+            .foregroundColor: ColorSet.acceptColor]
+
         UINavigationBar.appearance().standardAppearance = navBarAppearance
         UINavigationBar.appearance().scrollEdgeAppearance = navBarAppearance
-        UINavigationBar.appearance().tintColor = .brown
+        UINavigationBar.appearance().tintColor = ColorSet.acceptColor
         UINavigationBar.appearance().prefersLargeTitles = false
     }
 }

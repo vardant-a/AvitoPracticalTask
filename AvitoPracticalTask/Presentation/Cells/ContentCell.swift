@@ -23,12 +23,14 @@ final class ContentCell: UICollectionViewCell {
     private var contentImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.backgroundColor = .gray
+        imageView.clipsToBounds = true
         
         return imageView
     }()
 
     private var contentTitleLabel: UILabel = {
         let label = UILabel()
+        label.numberOfLines = 2
 
         return label
     }()
@@ -37,7 +39,7 @@ final class ContentCell: UICollectionViewCell {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .red
+        backgroundColor = ColorSet.tabBarColor
         contentView.addSubviewsDeactivateAutoMask(
             contentImageView, contentTitleLabel)
     }
@@ -57,14 +59,24 @@ final class ContentCell: UICollectionViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         setupLayout()
-        layer.cornerRadius = 10
-        contentImageView.layer.cornerRadius = layer.cornerRadius
+        layer.cornerRadius = Constants.cornerRadius
+        contentImageView.layer.cornerRadius = Constants.cornerRadius
     }
 
     // MARK: - Public Methods
 
     func configure(_ model: Advertisement) {
         contentTitleLabel.text = model.title
+        Task {
+            guard let imageUrl = model.imageUrl else { return }
+            let result = await RequestManager().fetchImage(imageUrl)
+            switch result {
+            case .success(let success):
+                contentImageView.image = UIImage(data: success)
+            case .failure(_):
+                print("1")
+            }
+        }
     }
 
     // MARK: - Layout

@@ -25,7 +25,6 @@ enum Host {
 enum Path {
     case main
     case details(itemId: String)
-    case image(itemId: String)
     
     var value: String {
         switch self {
@@ -33,8 +32,6 @@ enum Path {
             return "/s/interns-ios/main-page.json"
         case .details(let itemId):
             return "/s/interns-ios/details/\(itemId).json"
-        case.image(let itemId):
-            return "/s/interns-ios/images/\(itemId).png"
         }
     }
 }
