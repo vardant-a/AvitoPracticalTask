@@ -43,7 +43,7 @@ final class MainTabBarController: UITabBarController {
     private func configureTabBar() {
         let searchTab = configureTab(
             searchController,
-            title: "Search",
+            title: Localizable.Element.tabAdvertisement,
             image: ImageSet.searchTabBarItem,
             tag: 0)
         

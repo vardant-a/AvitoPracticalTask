@@ -9,7 +9,8 @@ import UIKit
 
 protocol SearchViewProtocol: AnyObject {
     func updateContent()
-    func showAlert()
+    func changeAndUpdateContent(_ indexPath: IndexPath)
+    func showAlert(_ alert: UIAlertController)
     func transition(to: UIViewController)
 }
 
@@ -63,6 +64,11 @@ final class SearchViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = ColorSet.backgroundColor
         view.addSubviewsDeactivateAutoMask(contentCollectionView)
+        let longPress = UILongPressGestureRecognizer(
+            target: self,
+            action: #selector(longPress)
+        )
+        contentCollectionView.addGestureRecognizer(longPress)
         presenter.getContent()
     }
     
@@ -72,15 +78,22 @@ final class SearchViewController: UIViewController {
     }
     
     // MARK: - @objc Methods
-
-    @objc private func tuppedMoreButton(_ sender: UIButton) {
-        print("1")
-        guard let cell = sender.superview as? ContentCell else { return }
-        print("2")
-        guard let indexPath = contentCollectionView.indexPath(for: cell) else { return }
-        print("3")
-        let selectedModel = presenter.content[indexPath.row]
-        print(selectedModel.id ?? "495")
+    
+    @objc
+    func longPress(longPressGestureRecognizer: UILongPressGestureRecognizer) {
+        switch presenter.loadingStatus {
+        case .loading, .notLoaded:
+            break
+        case .loaded:
+            if longPressGestureRecognizer.state == UIGestureRecognizer.State.began {
+                let touchPoint = longPressGestureRecognizer
+                    .location(in: contentCollectionView)
+                guard let indexPath = contentCollectionView
+                    .indexPathForItem(at: touchPoint) else { return }
+                presenter.showAlertAboutItem(indexPath)
+            }
+        
+        }
     }
     
     // MARK: - Layout
@@ -97,37 +110,41 @@ final class SearchViewController: UIViewController {
                 equalTo: view.safeAreaLayoutGuide.bottomAnchor),
         ])
     }
+
+    // MARK: - LocalConstants
+
+    private enum LocalConstants {
+        static let mockCellCount = 50
+    }
 }
 
     // MARK: - UICollectionViewDataSource
 
 extension SearchViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if !presenter.loading {
-           return presenter.content.count
-        } else {
-            return 20
+        switch presenter.loadingStatus {
+        case .loading:
+            return LocalConstants.mockCellCount
+        case .loaded:
+            return presenter.content.count
+        case .notLoaded:
+            return 4
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if !presenter.loading {
-            guard let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: ContentCell.cellID,
-                for: indexPath) as? ContentCell else {
-                return UICollectionViewCell()
-            }
-            let content = presenter.content[indexPath.row]
-            cell.configure(self, model: content, action: #selector(tuppedMoreButton(_:)))
-            
-            return cell
-        } else {
+        switch presenter.loadingStatus {
+        case .loading, .notLoaded:
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: SkeletonCell.cellID,
-                for: indexPath) as? SkeletonCell else {
-                return UICollectionViewCell()
-            }
-
+                for: indexPath) as? SkeletonCell else { return UICollectionViewCell() }
+            return cell
+        case .loaded:
+            guard let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: ContentCell.cellID,
+                for: indexPath) as? ContentCell else { return UICollectionViewCell() }
+            let content = presenter.content[indexPath.row]
+            cell.configure(title: content.title, price:  content.price, imageUrl: content.imageUrl)
             return cell
         }
     }
@@ -137,11 +154,12 @@ extension SearchViewController: UICollectionViewDataSource {
 
 extension SearchViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if !presenter.loading {
+        switch presenter.loadingStatus {
+        case .loading, .notLoaded:
+            collectionView.deselectItem(at: indexPath, animated: true)
+        case .loaded:
             guard let  itemId = presenter.content[indexPath.row].id else { return }
             presenter.configureDetailView(itemId)
-        } else {
-            collectionView.deselectItem(at: indexPath, animated: true)
         }
     }
 }
@@ -173,9 +191,19 @@ extension SearchViewController: SearchViewProtocol {
             self.contentCollectionView.reloadData()
         }
     }
+    
+    func changeAndUpdateContent(_ indexPath: IndexPath) {
+        DispatchQueue.main.async {
+            self.contentCollectionView.deleteItems(at: [indexPath])
+            self.contentCollectionView.reloadData()
+            
+        }
+    }
 
-    func showAlert() {
-        print("Error")
+    func showAlert(_ alert: UIAlertController) {
+        DispatchQueue.main.async {
+            self.present(alert, animated: true)
+        }
     }
 
     func transition(to view: UIViewController) {

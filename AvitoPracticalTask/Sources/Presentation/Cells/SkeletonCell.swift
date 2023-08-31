@@ -26,6 +26,11 @@ final class SkeletonCell: UICollectionViewCell {
         contentView.addSubviewsDeactivateAutoMask(
             emptyView, titleView, secondTitleView,
             addressView, dateView)
+        configureSkelet(emptyView)
+        configureSkelet(titleView)
+        configureSkelet(secondTitleView)
+        configureSkelet(addressView)
+        configureSkelet(dateView)
     }
 
     required init?(coder: NSCoder) {
@@ -38,16 +43,10 @@ final class SkeletonCell: UICollectionViewCell {
         super.layoutSubviews()
         setupLayout()
         layer.cornerRadius = Constants.cornerRadius
-        configureSkelet(emptyView)
-        configureSkelet(titleView)
-        configureSkelet(secondTitleView)
-        configureSkelet(addressView)
-        configureSkelet(dateView)
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        emptyView.addGradientLayer()
     }
 
     // MARK: - Private Methods
@@ -55,6 +54,7 @@ final class SkeletonCell: UICollectionViewCell {
     private func configureSkelet(_ view: UIView) {
         view.backgroundColor = .lightGray
         view.clipsToBounds = true
+        view.addGradientLayer()
         view.addGradientLayer()
     }
 

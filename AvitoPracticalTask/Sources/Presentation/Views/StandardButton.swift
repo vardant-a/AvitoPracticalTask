@@ -28,10 +28,24 @@ final class StandardButton: UIButton {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        layer.cornerRadius = 10
+        layer.cornerRadius = Constants.cornerRadius
+        setupLayout()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    // MARK: - Layout
+
+    private func setupLayout() {
+        self.heightAnchor.constraint(
+            equalToConstant: LocalConstants.standardHeight).isActive = true
+    }
+
+    // MARK: - LocalConstants
+
+    private enum LocalConstants {
+        static let standardHeight: CGFloat = 44
     }
 }

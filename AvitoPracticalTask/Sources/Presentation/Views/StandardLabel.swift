@@ -7,29 +7,35 @@
 
 import UIKit
 
+enum FontSet {
+    static let cellH1 = UIFont.systemFont(ofSize: 16)
+    static let cellH1Bold = UIFont.systemFont(ofSize: 15, weight: .black)
+    static let textH1 = UIFont.systemFont(ofSize: 24)
+    static let textH2 = UIFont.systemFont(ofSize: 20, weight: .black)
+    static let textH3 = UIFont.systemFont(ofSize: 18, weight: .bold)
+    static let textH4 = UIFont.systemFont(ofSize: 17)
+    static let targetText = UIFont.systemFont(ofSize: 25, weight: .black)
+}
+
 final class StandardLabel: UILabel {
+    
+    enum Alignment {
+        case top
+        case bottom
+    }
+    
+    var alignment: Alignment = .top
+    
     // MARK: - Init
     
-    convenience init(_ type: LabelType) {
+    convenience init(_ text: String? = nil, color: UIColor = ColorSet.acceptColor,
+                     fontOfSize: UIFont, numberOfLines: Int = 0) {
         self.init(frame: .zero)
-        switch type {
-        case .heightTitle:
-            configure(
-                font: UIFont.systemFont(ofSize: 33, weight: .black))
-        case .lowTitle:
-            configure(
-                font: UIFont.systemFont(ofSize: 13))
-        case .regular:
-            configure()
-        case .signature:
-            configure(
-                font: UIFont.systemFont(ofSize: 11, weight: .medium),
-                andColor: .gray)
-        case .secondText:
-            configure(
-                font: UIFont.systemFont(ofSize: 15, weight: .regular),
-                andColor: .darkGray)
-        }
+        self.text = text
+        self.textColor = color
+        self.font = fontOfSize
+        self.numberOfLines = numberOfLines
+        
     }
     
     override init(frame: CGRect) {
@@ -39,19 +45,16 @@ final class StandardLabel: UILabel {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    // MARK: - Private Methods
-
-    private func configure(font: UIFont? = UIFont.systemFont(ofSize: 17), andColor: UIColor? = ColorSet.acceptColor) {
-        self.font = font
-        textColor = andColor
-    }
-}
-
-    // MARK: - Style
-
-extension StandardLabel {
-    enum LabelType {
-        case heightTitle, lowTitle, regular, signature, secondText
+    
+    override func drawText(in rect: CGRect) {
+        var rect = rect
+        if alignment == .top {
+            rect.size.height = sizeThatFits(rect.size).height
+        } else if alignment == .bottom {
+            let height = sizeThatFits(rect.size).height
+            rect.origin.y += rect.size.height - height
+            rect.size.height = height
+        }
+        super.drawText(in: rect)
     }
 }

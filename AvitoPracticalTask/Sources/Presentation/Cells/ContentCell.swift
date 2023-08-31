@@ -14,27 +14,25 @@ final class ContentCell: UICollectionViewCell {
 
     // MARK: - Private Properties
 
+    private var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView()
+        indicator.hidesWhenStopped = true
+    
+        return indicator
+    }()
+
     private var contentImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.backgroundColor = .gray
         imageView.clipsToBounds = true
         
         return imageView
     }()
 
-    private var contentTitleLabel: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 2
+    private var contentTitleLabel = StandardLabel(
+        fontOfSize: FontSet.cellH1, numberOfLines: 2)
 
-        return label
-    }()
-
-    private var moreButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(UIImage(named: "more"), for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        return button
-    }()
+    private var priceLabel = StandardLabel(
+        fontOfSize: FontSet.cellH1Bold, numberOfLines: 2)
 
     // MARK: - Init
 
@@ -42,7 +40,8 @@ final class ContentCell: UICollectionViewCell {
         super.init(frame: frame)
         backgroundColor = .clear
         contentView.addSubviewsDeactivateAutoMask(
-            contentImageView, contentTitleLabel, moreButton)
+            contentImageView, contentTitleLabel, priceLabel)
+        contentImageView.addSubviewsDeactivateAutoMask(activityIndicator)
     }
     
     required init?(coder: NSCoder) {
@@ -53,8 +52,7 @@ final class ContentCell: UICollectionViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        contentImageView.image = nil
-        contentTitleLabel.text = nil
+        startingCell()
     }
 
     override func layoutSubviews() {
@@ -66,20 +64,30 @@ final class ContentCell: UICollectionViewCell {
 
     // MARK: - Public Methods
 
-    func configure(_ target: Any?, model: Advertisement, action: Selector) {
-        contentTitleLabel.text = model.title
+    func configure(title: String?, price: String?, imageUrl: String?) {
+        contentTitleLabel.text = title
+        priceLabel.text = price
+        activityIndicator.startAnimating()
         Task {
-            guard let imageUrl = model.imageUrl else { return }
-            let result = await NetworkManager().fetchImage(imageUrl)
+            guard let stringUrl = imageUrl else { return }
+            let result = await NetworkManager().fetchImage(stringUrl)
             switch result {
             case .success(let success):
                 contentImageView.image = UIImage(data: success)
+                activityIndicator.stopAnimating()
             case .failure(_):
-                print("1")
+                contentImageView.backgroundColor = ColorSet.tabBarColor
             }
         }
+    }
     
-        moreButton.addTarget(target, action: action, for: .touchUpInside)
+    // MARK: - Private Methods
+
+    private func startingCell() {
+        contentImageView.image = nil
+        contentTitleLabel.text = nil
+        priceLabel.text = nil
+        activityIndicator.startAnimating()
     }
 
     // MARK: - Layout
@@ -95,21 +103,36 @@ final class ContentCell: UICollectionViewCell {
             contentImageView.heightAnchor.constraint(
                 equalTo: contentImageView.widthAnchor),
             
-            moreButton.topAnchor.constraint(
-                equalTo: contentImageView.bottomAnchor,
-                constant: 4),
-            moreButton.trailingAnchor.constraint(
-                equalTo: contentView.trailingAnchor),
-            moreButton.widthAnchor.constraint(equalToConstant: 20),
+            activityIndicator.centerXAnchor.constraint(
+                equalTo: contentImageView.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(
+                equalTo: contentImageView.centerYAnchor),
             
             contentTitleLabel.topAnchor.constraint(
                 equalTo: contentImageView.bottomAnchor,
-                constant: 4),
+                constant: LocalConstants.lowVerticalOffset),
             contentTitleLabel.leadingAnchor.constraint(
                 equalTo: contentView.leadingAnchor),
             contentTitleLabel.trailingAnchor.constraint(
-                equalTo: moreButton.leadingAnchor,
-                constant: -8)
+                equalTo: contentView.trailingAnchor,
+                constant: -LocalConstants.bigHorizontalOffset),
+            contentTitleLabel.heightAnchor.constraint(
+                equalToConstant: 40),
+            priceLabel.topAnchor.constraint(
+                equalTo: contentTitleLabel.bottomAnchor,
+                constant: LocalConstants.lowVerticalOffset),
+            priceLabel.leadingAnchor.constraint(
+                equalTo: contentView.leadingAnchor),
+            priceLabel.trailingAnchor.constraint(
+                equalTo: contentView.trailingAnchor)
         ])
+    }
+
+    // MARK: - LocalConstants
+
+    private enum LocalConstants {
+        static let lowVerticalOffset: CGFloat = 4
+        static let bigHorizontalOffset: CGFloat = 30
+        static let numberOfLine: CGFloat = 2
     }
 }

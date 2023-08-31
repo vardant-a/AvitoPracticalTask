@@ -27,14 +27,14 @@ final class DetailViewController: UIViewController {
         return imageView
     }()
 
-    private var priceDetailLabel = StandardLabel(.heightTitle)
-    private var detailTitleLabel = StandardLabel(.heightTitle)
+    private var priceDetailLabel = StandardLabel(color: ColorSet.acceptColor, fontOfSize: FontSet.targetText, numberOfLines: 2)
+    private var detailTitleLabel = StandardLabel(color: ColorSet.acceptColor, fontOfSize: FontSet.textH1, numberOfLines: 2)
 
     // MARK: - Private lazy Properties
     
     private lazy var callButton = StandardButton(
         self,
-        title: "Call",
+        title: Localizable.Element.callButton,
         titleColor: .white,
         buttonColor: .systemGreen,
         action: #selector(tuppedCallButton))

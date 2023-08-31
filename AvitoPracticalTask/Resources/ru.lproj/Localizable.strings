@@ -1,0 +1,29 @@
+/* 
+  Localizable.strings
+  AvitoPracticalTask
+
+  Created by Aleksei on 31.08.2023.
+  
+*/
+
+// MARK: - Element
+
+"Element.TabAdvertisement" = "Объявления";
+"Element.SearchPlaceholder" = "Поиск";
+"Element.CallButton" = "Позвонить";
+
+// MARK: - Request
+
+"Request.Message.InvalidURL" = "Не удалось подключиться к серверу, повторите попытку ";
+"Request.Message.DataNotReceived" = "Не удалось получить данные с сервера. Проверьте подключение к интернету и повторите попытку.";
+"Request.Message.DecodeError" = "Произошла ошибка при обработке и отображении данных. Пожалуйста, попробуйте еще раз.";
+
+// MARK: - AlertAction
+
+"AlertAction.Now" = "Cейчас";
+"AlertAction.Later" = "Позже";
+"AlertAction.Settings" = "Настройки";
+"AlertAction.Share" = "Поделиться";
+"AlertAction.ShowDetail" = "Посмотреть детально";
+"AlertAction.Cancel" = "Отмена";
+"AlertAction.Delete" = "Удалить";
