@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import MapKit
 
 protocol DetailViewProtocol: AnyObject {
-    func update(_ image: UIImage?, title: String, price: String)
-    func presentSharePanel(_ activity: UIActivityViewController)
+    func update(_ image: UIImage?, title: String?, price: String?, description: String?,
+                location: String?, address: String?, date: String?)
+    func setupMapPoint(annotation: MKPointAnnotation, region: MKCoordinateRegion)
 }
 
 final class DetailViewController: UIViewController {
@@ -27,8 +29,18 @@ final class DetailViewController: UIViewController {
         return imageView
     }()
 
-    private var priceDetailLabel = StandardLabel(color: ColorSet.accept, fontOfSize: FontSet.targetText, numberOfLines: 2)
-    private var detailTitleLabel = StandardLabel(color: ColorSet.accept, fontOfSize: FontSet.textH1, numberOfLines: 2)
+    private var priceLabel = StandardLabel(
+        fontOfSize: FontSet.targetText, numberOfLines: 2)
+    private var titleLabel = StandardLabel(
+        fontOfSize: FontSet.textH1, numberOfLines: 2)
+    private var descriptionSectionLabel = StandardLabel(
+        Localizable.Element.descriptionLabel, fontOfSize: FontSet.textH2)
+    private var descriptionLabel = StandardLabel(fontOfSize: FontSet.textH4)
+    
+    private var locationLabel = StandardLabel(fontOfSize: FontSet.textH4)
+    private var addressLabel = StandardLabel(fontOfSize: FontSet.textH4)
+    
+    private let mapView = MKMapView()
 
     // MARK: - Private lazy Properties
     
@@ -55,13 +67,14 @@ final class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavigationBar()
-        priceDetailLabel.text = "Price"
-        detailTitleLabel.text = "Title"
-        detailTitleLabel.numberOfLines = 2
+        priceLabel.text = "Price"
+        titleLabel.text = "Title"
+        titleLabel.numberOfLines = 2
         view.backgroundColor =  ColorSet.background
         view.addSubviewsDeactivateAutoMask(
-            detailImageView, priceDetailLabel, detailTitleLabel,
-            callButton)
+            detailImageView, priceLabel, titleLabel,
+            descriptionSectionLabel, descriptionLabel,
+            mapView, callButton)
         presenter.showContent()
     }
 
@@ -111,24 +124,44 @@ final class DetailViewController: UIViewController {
             detailImageView.trailingAnchor.constraint(
                 equalTo: view.trailingAnchor),
             detailImageView.heightAnchor.constraint(
-                equalToConstant: 330),
+                equalToConstant: 250),
             
-            priceDetailLabel.topAnchor.constraint(
+            priceLabel.topAnchor.constraint(
                 equalTo: detailImageView.bottomAnchor,
                 constant: Constants.verticalOffset / 2),
-            priceDetailLabel.leadingAnchor.constraint(
+            priceLabel.leadingAnchor.constraint(
                 equalTo: view.leadingAnchor,
                 constant: Constants.horizontalOffset),
-            priceDetailLabel.trailingAnchor.constraint(
+            priceLabel.trailingAnchor.constraint(
                 equalTo: view.trailingAnchor,
                 constant: -Constants.horizontalOffset),
-            detailTitleLabel.topAnchor.constraint(
-                equalTo: priceDetailLabel.bottomAnchor,
+            titleLabel.topAnchor.constraint(
+                equalTo: priceLabel.bottomAnchor,
                 constant: Constants.verticalOffset / 2),
-            detailTitleLabel.leadingAnchor.constraint(
+            titleLabel.leadingAnchor.constraint(
                 equalTo: view.leadingAnchor,
                 constant: Constants.horizontalOffset),
-            detailTitleLabel.trailingAnchor.constraint(
+            titleLabel.trailingAnchor.constraint(
+                equalTo: view.trailingAnchor,
+                constant: -Constants.horizontalOffset),
+            
+            descriptionSectionLabel.topAnchor.constraint(
+                equalTo: titleLabel.bottomAnchor,
+                constant: Constants.verticalOffset),
+            descriptionSectionLabel.leadingAnchor.constraint(
+                equalTo: view.leadingAnchor, constant:
+                    Constants.horizontalOffset),
+            descriptionSectionLabel.trailingAnchor.constraint(
+                equalTo: view.trailingAnchor,
+                constant: -Constants.horizontalOffset),
+            
+            descriptionLabel.topAnchor.constraint(
+                equalTo: descriptionSectionLabel.bottomAnchor,
+                constant: Constants.verticalOffset / 2),
+            descriptionLabel.leadingAnchor.constraint(
+                equalTo: view.leadingAnchor,
+                constant: Constants.horizontalOffset),
+            descriptionLabel.trailingAnchor.constraint(
                 equalTo: view.trailingAnchor,
                 constant: -Constants.horizontalOffset),
             
@@ -140,7 +173,20 @@ final class DetailViewController: UIViewController {
                 constant: Constants.horizontalOffset),
             callButton.trailingAnchor.constraint(
                 equalTo: view.trailingAnchor,
-                constant: -Constants.horizontalOffset)
+                constant: -Constants.horizontalOffset),
+            
+            mapView.topAnchor.constraint(
+                equalTo: descriptionLabel.bottomAnchor,
+                constant: Constants.verticalOffset),
+            mapView.leadingAnchor.constraint(
+                equalTo: view.leadingAnchor,
+                constant: Constants.horizontalOffset),
+            mapView.trailingAnchor.constraint(
+                equalTo: view.trailingAnchor,
+                constant: -Constants.horizontalOffset),
+            mapView.bottomAnchor.constraint(
+                equalTo: callButton.topAnchor,
+                constant: -Constants.verticalOffset)
         ])
     }
 }
@@ -148,33 +194,32 @@ final class DetailViewController: UIViewController {
     // MARK: - DetailViewProtocol
 
 extension DetailViewController: DetailViewProtocol {
-    func update(_ image: UIImage?, title: String, price: String) {
+    func update(_ image: UIImage?, title: String?, price: String?, description: String?,
+                location: String?, address: String?, date: String?) {
         DispatchQueue.main.async {
             self.detailImageView.image = image
-            self.detailTitleLabel.text = title
-            self.priceDetailLabel.text = price
+            self.titleLabel.text = title
+            self.priceLabel.text = price
+            self.descriptionLabel.text = description
         }
     }
     
-    func presentSharePanel(_ activity: UIActivityViewController) {
-        func presentSharePanel(_ activity: UIActivityViewController) {
-            activity.popoverPresentationController?.sourceView = self.view
-            
-            self.present(activity, animated: true)
-        }
+    func setupMapPoint(annotation: MKPointAnnotation, region: MKCoordinateRegion) {
+        mapView.addAnnotation(annotation)
+        mapView.setRegion(region, animated: true)
     }
-}
-
-struct DetialControllerProvider: PreviewProvider {
-    static var previews: some View {
-        ViewControllerPreview {
-            UINavigationController(
-                rootViewController: DetailViewController(
-                    presenter: DetailPresenter(
-                        itemId: "2",
-                        networkService: NetworkManager(),
-                        stringValidatorService: StringValidator())))
+    
+    struct DetialControllerProvider: PreviewProvider {
+        static var previews: some View {
+            ViewControllerPreview {
+                UINavigationController(
+                    rootViewController: DetailViewController(
+                        presenter: DetailPresenter(
+                            itemId: "2",
+                            networkService: NetworkManager(),
+                            stringValidatorService: StringValidator())))
+            }
+            .edgesIgnoringSafeArea(.all)
         }
-        .edgesIgnoringSafeArea(.all)
     }
 }

@@ -10,8 +10,8 @@ import Foundation
 enum Localizable {
     enum Element {
         static let tabAdvertisement = NSLocalizedString("Element.TabAdvertisement", comment: "")
-        static let SearchPlaceholder = NSLocalizedString("Element.SearchPlaceholder", comment: "")
         static let callButton = NSLocalizedString("Element.CallButton", comment: "")
+        static let descriptionLabel = NSLocalizedString("Element.Description", comment: "")
     }
     
     enum Request {

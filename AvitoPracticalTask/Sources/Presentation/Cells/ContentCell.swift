@@ -156,10 +156,10 @@ final class ContentCell: UICollectionViewCell {
                 equalTo: contentView.leadingAnchor),
             
             dateLabel.topAnchor.constraint(
-                equalTo: priceLabel.bottomAnchor,
+                equalTo: addressLabel.bottomAnchor,
                 constant: LocalConstants.lowVerticalOffset),
-            dateLabel.trailingAnchor.constraint(
-                equalTo: contentView.trailingAnchor)
+            dateLabel.leadingAnchor.constraint(
+                equalTo: contentView.leadingAnchor)
         ])
     }
 

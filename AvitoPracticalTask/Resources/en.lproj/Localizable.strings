@@ -9,8 +9,8 @@
 // MARK: - Element
 
 "Element.TabAdvertisement" = "Advertisements";
-"Element.SearchPlaceholder" = "Search";
 "Element.CallButton" = "Call";
+"Element.Description" = "Description:";
 
 // MARK: - Request
 

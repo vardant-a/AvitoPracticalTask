@@ -19,6 +19,7 @@ protocol SearchViewPresenter: AnyObject {
     func inject(view: SearchViewProtocol?)
 
     func getContent()
+    func formatedDate(_ inputDateStr: String?) -> String
     func showAlertAboutItem(_ indexPath: IndexPath)
     func configureDetailView(_ itemId: String)
 }
@@ -64,6 +65,8 @@ final class SearchPresenter {
             }
         }
     }
+    
+
 
     private func initFailureEvent(_ failure: RequestError) {
         switch failure {
@@ -143,6 +146,21 @@ extension SearchPresenter: SearchViewPresenter {
         Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { _ in
             self.fetch()
         }
+    }
+    
+    func formatedDate(_ inputDateStr: String?) -> String {
+        guard let inputDateStr = inputDateStr else { return "" }
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.locale = Locale(identifier: "ru_RU")
+        
+        if let inputDate = dateFormatter.date(from: inputDateStr) {
+            dateFormatter.dateFormat = "d MMMM yyyy"
+            let formattedDateStr = dateFormatter.string(from: inputDate)
+            return formattedDateStr
+        }
+        
+        return inputDateStr
     }
     
     func showAlertAboutItem(_ indexPath: IndexPath) {

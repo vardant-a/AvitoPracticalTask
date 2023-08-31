@@ -145,7 +145,7 @@ extension SearchViewController: UICollectionViewDataSource {
                 title: content.title,
                 price:  content.price,
                 address: content.location,
-                date: content.createdDate,
+                date: presenter.formatedDate(content.createdDate),
                 imageUrl: content.imageUrl)
             return cell
         }
@@ -173,7 +173,7 @@ extension SearchViewController: UICollectionViewDelegateFlowLayout {
         let offsets = Constants.horizontalOffset * 2 + Constants.horizontalOffset / 2
         return CGSize(
             width: (collectionView.frame.size.width - offsets) / 2,
-            height: collectionView.frame.size.height / 2.5)
+            height: collectionView.frame.size.height / 2.4)
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
