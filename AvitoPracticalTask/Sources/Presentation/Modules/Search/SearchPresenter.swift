@@ -7,6 +7,10 @@
 
 import UIKit
 
+enum LoadingStatus {
+    case loading, loaded, notLoaded
+}
+
 protocol SearchViewPresenter: AnyObject {
     var loading: Bool { get }
     var content: [Advertisement] { get }
@@ -77,7 +81,8 @@ extension SearchPresenter: SearchViewPresenter {
     func configureDetailView(_ itemId: String) {
         let presenter = DetailPresenter(
             itemId: itemId,
-            networkService: networkService)
+            networkService: networkService,
+            stringValidatorService: StringValidator())
         let controller = DetailViewController(presenter: presenter)
         presenter.inject(view: controller)
         view?.transition(to: controller)

@@ -9,6 +9,7 @@ import SwiftUI
 
 protocol DetailViewProtocol: AnyObject {
     func update(_ image: UIImage?, title: String, price: String)
+    func presentSharePanel(_ activity: UIActivityViewController)
 }
 
 final class DetailViewController: UIViewController {
@@ -38,13 +39,6 @@ final class DetailViewController: UIViewController {
         buttonColor: .systemGreen,
         action: #selector(tuppedCallButton))
 
-    private lazy var writeButton = StandardButton(
-        self,
-        title: "Write",
-        titleColor: .white,
-        buttonColor: .systemBlue,
-        action: #selector(tuppedWriteButton))
-
     // MARK: - Init
 
     init(presenter: DetailViewPresenter) {
@@ -67,7 +61,7 @@ final class DetailViewController: UIViewController {
         view.backgroundColor =  ColorSet.backgroundColor
         view.addSubviewsDeactivateAutoMask(
             detailImageView, priceDetailLabel, detailTitleLabel,
-            callButton, writeButton)
+            callButton)
         presenter.showContent()
     }
 
@@ -94,25 +88,12 @@ final class DetailViewController: UIViewController {
             style: .plain,
             target: self,
             action: #selector(tuppedBackButton))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            image: ImageSet.share,
-            style: .plain,
-            target: self,
-            action: #selector(tuppedShareButton))
     }
 
     // MARK: - @Objc Methods
 
     @objc private func tuppedCallButton() {
         presenter.call()
-    }
-
-    @objc private func tuppedWriteButton() {
-        print("write")
-    }
-
-    @objc private func tuppedShareButton() {
-        print("Share")
     }
 
     @objc private func tuppedBackButton() {
@@ -158,16 +139,6 @@ final class DetailViewController: UIViewController {
                 equalTo: view.leadingAnchor,
                 constant: Constants.horizontalOffset),
             callButton.trailingAnchor.constraint(
-                equalTo: view.centerXAnchor,
-                constant: -Constants.horizontalOffset / 2),
-            
-            writeButton.bottomAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.bottomAnchor,
-                constant: -Constants.verticalOffset),
-            writeButton.leadingAnchor.constraint(
-                equalTo: view.centerXAnchor,
-                constant: Constants.horizontalOffset / 2),
-            writeButton.trailingAnchor.constraint(
                 equalTo: view.trailingAnchor,
                 constant: -Constants.horizontalOffset)
         ])
@@ -184,6 +155,14 @@ extension DetailViewController: DetailViewProtocol {
             self.priceDetailLabel.text = price
         }
     }
+    
+    func presentSharePanel(_ activity: UIActivityViewController) {
+        func presentSharePanel(_ activity: UIActivityViewController) {
+            activity.popoverPresentationController?.sourceView = self.view
+            
+            self.present(activity, animated: true)
+        }
+    }
 }
 
 struct DetialControllerProvider: PreviewProvider {
@@ -193,7 +172,8 @@ struct DetialControllerProvider: PreviewProvider {
                 rootViewController: DetailViewController(
                     presenter: DetailPresenter(
                         itemId: "2",
-                        networkService: NetworkManager())))
+                        networkService: NetworkManager(),
+                        stringValidatorService: StringValidator())))
         }
         .edgesIgnoringSafeArea(.all)
     }

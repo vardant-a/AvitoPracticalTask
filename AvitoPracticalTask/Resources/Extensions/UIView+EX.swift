@@ -15,6 +15,12 @@ extension UIView {
         }
     }
 
+    func removeSubviews() {
+        subviews.forEach {
+            $0.removeSubviews()
+        }
+    }
+
     func addGradientLayer() {
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = self.bounds

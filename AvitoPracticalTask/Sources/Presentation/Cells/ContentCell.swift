@@ -7,12 +7,6 @@
 
 import UIKit
 
-struct TestModel {
-    var id: Int?
-    var title: String?
-    var price: String?
-}
-
 final class ContentCell: UICollectionViewCell {
     // MARK: - Public Properties
 
@@ -35,13 +29,20 @@ final class ContentCell: UICollectionViewCell {
         return label
     }()
 
+    private var moreButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(named: "more"), for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
+
     // MARK: - Init
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = ColorSet.tabBarColor
+        backgroundColor = .clear
         contentView.addSubviewsDeactivateAutoMask(
-            contentImageView, contentTitleLabel)
+            contentImageView, contentTitleLabel, moreButton)
     }
     
     required init?(coder: NSCoder) {
@@ -65,7 +66,7 @@ final class ContentCell: UICollectionViewCell {
 
     // MARK: - Public Methods
 
-    func configure(_ model: Advertisement) {
+    func configure(_ target: Any?, model: Advertisement, action: Selector) {
         contentTitleLabel.text = model.title
         Task {
             guard let imageUrl = model.imageUrl else { return }
@@ -77,6 +78,8 @@ final class ContentCell: UICollectionViewCell {
                 print("1")
             }
         }
+    
+        moreButton.addTarget(target, action: action, for: .touchUpInside)
     }
 
     // MARK: - Layout
@@ -90,18 +93,22 @@ final class ContentCell: UICollectionViewCell {
             contentImageView.trailingAnchor.constraint(
                 equalTo: contentView.trailingAnchor),
             contentImageView.heightAnchor.constraint(
-                equalTo: contentImageView.widthAnchor)
-        ])
-
-        NSLayoutConstraint.activate([
+                equalTo: contentImageView.widthAnchor),
+            
+            moreButton.topAnchor.constraint(
+                equalTo: contentImageView.bottomAnchor,
+                constant: 4),
+            moreButton.trailingAnchor.constraint(
+                equalTo: contentView.trailingAnchor),
+            moreButton.widthAnchor.constraint(equalToConstant: 20),
+            
             contentTitleLabel.topAnchor.constraint(
                 equalTo: contentImageView.bottomAnchor,
                 constant: 4),
             contentTitleLabel.leadingAnchor.constraint(
-                equalTo: contentView.leadingAnchor,
-                constant: 8),
+                equalTo: contentView.leadingAnchor),
             contentTitleLabel.trailingAnchor.constraint(
-                equalTo: contentView.trailingAnchor,
+                equalTo: moreButton.leadingAnchor,
                 constant: -8)
         ])
     }

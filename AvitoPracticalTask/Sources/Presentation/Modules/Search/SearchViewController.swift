@@ -21,8 +21,8 @@ final class SearchViewController: UIViewController {
     private let collectionLayout: UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
-        layout.minimumInteritemSpacing = 8
-        layout.minimumLineSpacing = 8
+        layout.minimumInteritemSpacing = Constants.spacing
+        layout.minimumLineSpacing = Constants.spacing
         
         return layout
     }()
@@ -70,7 +70,19 @@ final class SearchViewController: UIViewController {
         super.viewDidLayoutSubviews()
         setupLayout()
     }
+    
+    // MARK: - @objc Methods
 
+    @objc private func tuppedMoreButton(_ sender: UIButton) {
+        print("1")
+        guard let cell = sender.superview as? ContentCell else { return }
+        print("2")
+        guard let indexPath = contentCollectionView.indexPath(for: cell) else { return }
+        print("3")
+        let selectedModel = presenter.content[indexPath.row]
+        print(selectedModel.id ?? "495")
+    }
+    
     // MARK: - Layout
 
     private func setupLayout() {
@@ -106,7 +118,7 @@ extension SearchViewController: UICollectionViewDataSource {
                 return UICollectionViewCell()
             }
             let content = presenter.content[indexPath.row]
-            cell.configure(content)
+            cell.configure(self, model: content, action: #selector(tuppedMoreButton(_:)))
             
             return cell
         } else {
@@ -128,6 +140,8 @@ extension SearchViewController: UICollectionViewDelegate {
         if !presenter.loading {
             guard let  itemId = presenter.content[indexPath.row].id else { return }
             presenter.configureDetailView(itemId)
+        } else {
+            collectionView.deselectItem(at: indexPath, animated: true)
         }
     }
 }

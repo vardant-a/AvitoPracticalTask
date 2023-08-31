@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 protocol DetailViewPresenter: AnyObject {
-    init(itemId: String, networkService: NetworkManager)
+    init(itemId: String, networkService: NetworkManager, stringValidatorService: StringValidatorService)
     
     func inject(view: DetailViewProtocol)
     func showContent()
@@ -22,14 +22,21 @@ final class DetailPresenter {
     private weak var view: DetailViewProtocol?
     
     private let networkService: NetworkManager
+    private let stringValidatorService: StringValidatorService
 
     private let itemId: String
 
+    private var item: Advertisement = Advertisement()
+
     // MARK: - Init
 
-    required init(itemId: String, networkService: NetworkManager) {
+    required init(
+        itemId: String, networkService: NetworkManager,
+        stringValidatorService: StringValidatorService
+    ) {
         self.itemId = itemId
         self.networkService = networkService
+        self.stringValidatorService = stringValidatorService
     }
     
     func inject(view: DetailViewProtocol) {
@@ -42,7 +49,10 @@ final class DetailPresenter {
 
 extension DetailPresenter: DetailViewPresenter {
     func call() {
-        if let phoneCallURL = URL(string: "tel://\(79999999999)") {
+        guard let phoneNumber = item.phoneNumber else { return }
+        let number = stringValidatorService.clearStringValue(phoneNumber)
+        
+        if let phoneCallURL = URL(string: "tel://" + number) {
             let application:UIApplication = UIApplication.shared
             if (application.canOpenURL(phoneCallURL)) {
                 application.open(phoneCallURL, options: [:], completionHandler: nil)
@@ -59,6 +69,7 @@ extension DetailPresenter: DetailViewPresenter {
                     getImage(success),
                     title: success.title ?? "title",
                     price: success.price ?? "1")
+                item = success
             case .failure(_):
                 print("1")
             }
@@ -66,13 +77,13 @@ extension DetailPresenter: DetailViewPresenter {
     }
     
     private func getImage(_ model: Advertisement?) async -> UIImage? {
-            guard let imageUrl = model?.imageUrl else { return nil }
-            let result = await NetworkManager().fetchImage(imageUrl)
-            switch result {
-            case .success(let success):
-                return UIImage(data: success)
-            case .failure(_):
-                return nil
-            }
+        guard let imageUrl = model?.imageUrl else { return nil }
+        let result = await NetworkManager().fetchImage(imageUrl)
+        switch result {
+        case .success(let success):
+            return UIImage(data: success)
+        case .failure(_):
+            return nil
+        }
     }
 }
