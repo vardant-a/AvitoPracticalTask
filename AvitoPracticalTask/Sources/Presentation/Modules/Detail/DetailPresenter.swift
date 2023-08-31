@@ -11,14 +11,16 @@ import CoreLocation
 import MapKit
 
 protocol DetailViewPresenter: AnyObject {
+    var loadingStatus: LoadingStatus { get }
     init(itemId: String, networkService: NetworkManager, stringValidatorService: StringValidatorService)
-    
     func inject(view: DetailViewProtocol)
-    func showContent()
+    
+    func getContent()
     func call()
 }
 
 final class DetailPresenter {
+    
     // MARK: - Private Properties
 
     private weak var view: DetailViewProtocol?
@@ -29,6 +31,8 @@ final class DetailPresenter {
     private let itemId: String
 
     private var item: Advertisement = Advertisement()
+    
+    private var loadingContentStatus: LoadingStatus = .loading
 
     // MARK: - Init
 
@@ -97,10 +101,38 @@ final class DetailPresenter {
             longitudinalMeters: 5000)
         view?.setupMapPoint(annotation: annotation, region: region)
     }
+    
+    private func fetch() {
+        Task {
+            let networkResult = await networkService.fetchDetails(itemId: itemId)
+            switch networkResult {
+            case .success(let success):
+                item = success
+                await view?.update(
+                    getImage(success),
+                    title: success.title,
+                    price: success.price,
+                    description: success.description,
+                    location: success.location,
+                    address: success.address,
+                    date: formatedDate(item.createdDate))
+                item = success
+                guard let cityName = item.location else { return }
+                loadingContentStatus = .loaded
+                geocode(cityName)
+            case .failure(_):
+                break
+            }
+        }
+    }
 }
     // MARK: - DetailViewPresenter
 
 extension DetailPresenter: DetailViewPresenter {
+    var loadingStatus: LoadingStatus {
+        return loadingContentStatus
+    }
+
     func call() {
         guard let phoneNumber = item.phoneNumber else { return }
         let number = stringValidatorService.clearStringValue(phoneNumber)
@@ -113,27 +145,9 @@ extension DetailPresenter: DetailViewPresenter {
           }
     }
     
-    func showContent() {
-        Task {
-            let networkResult = await networkService.fetchDetails(itemId: itemId)
-            switch networkResult {
-            case .success(let success):
-                item = success
-                
-                await view?.update(
-                    getImage(success),
-                    title: success.title,
-                    price: success.price,
-                    description: success.description,
-                    location: success.location,
-                    address: success.address,
-                    date: formatedDate(item.createdDate))
-                item = success
-                guard let cityName = item.location else { return }
-                geocode(cityName)
-            case .failure(_):
-                break
-            }
+    func getContent() {
+        Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { _ in
+            self.fetch()
         }
     }
 }

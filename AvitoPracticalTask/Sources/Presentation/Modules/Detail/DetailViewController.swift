@@ -22,23 +22,40 @@ final class DetailViewController: UIViewController {
     
     private var detailImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.backgroundColor = .red
+        imageView.backgroundColor = ColorSet.second
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
     
         return imageView
     }()
+    
+    private var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView()
+        indicator.startAnimating()
+        indicator.hidesWhenStopped = true
+    
+        return indicator
+    }()
 
     private var priceLabel = StandardLabel(
         fontOfSize: FontSet.targetText, numberOfLines: 2)
+    
     private var titleLabel = StandardLabel(
         fontOfSize: FontSet.textH1, numberOfLines: 2)
+    
     private var descriptionSectionLabel = StandardLabel(
         Localizable.Element.descriptionLabel, fontOfSize: FontSet.textH2)
+    
     private var descriptionLabel = StandardLabel(fontOfSize: FontSet.textH4)
     
-    private var locationLabel = StandardLabel(fontOfSize: FontSet.textH4)
-    private var addressLabel = StandardLabel(fontOfSize: FontSet.textH4)
+    private var locationLabel = StandardLabel(
+        color: ColorSet.second, fontOfSize: FontSet.textH4)
+    
+    private var addressLabel = StandardLabel(
+        color: ColorSet.second, fontOfSize: FontSet.textH4)
+    
+    private var dateLabel = StandardLabel(
+        color: ColorSet.second, fontOfSize: FontSet.textH4)
     
     private let mapView = MKMapView()
 
@@ -67,15 +84,16 @@ final class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavigationBar()
-        priceLabel.text = "Price"
-        titleLabel.text = "Title"
         titleLabel.numberOfLines = 2
+        callButton.isEnabled = presenter.loadingStatus == .loaded
         view.backgroundColor =  ColorSet.background
+        detailImageView.addSubviewsDeactivateAutoMask(activityIndicator)
         view.addSubviewsDeactivateAutoMask(
             detailImageView, priceLabel, titleLabel,
             descriptionSectionLabel, descriptionLabel,
-            mapView, callButton)
-        presenter.showContent()
+            locationLabel, addressLabel, dateLabel, mapView,
+            callButton)
+        presenter.getContent()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -106,7 +124,9 @@ final class DetailViewController: UIViewController {
     // MARK: - @Objc Methods
 
     @objc private func tuppedCallButton() {
-        presenter.call()
+        if presenter.loadingStatus == .loaded {
+            presenter.call()
+        }
     }
 
     @objc private func tuppedBackButton() {
@@ -125,6 +145,11 @@ final class DetailViewController: UIViewController {
                 equalTo: view.trailingAnchor),
             detailImageView.heightAnchor.constraint(
                 equalToConstant: 250),
+            
+            activityIndicator.centerXAnchor.constraint(
+                equalTo: detailImageView.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(
+                equalTo: detailImageView.centerYAnchor),
             
             priceLabel.topAnchor.constraint(
                 equalTo: detailImageView.bottomAnchor,
@@ -165,6 +190,27 @@ final class DetailViewController: UIViewController {
                 equalTo: view.trailingAnchor,
                 constant: -Constants.horizontalOffset),
             
+            locationLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: Constants.verticalOffset / 2),
+            locationLabel.leadingAnchor.constraint(
+                equalTo: view.leadingAnchor,
+                constant: Constants.horizontalOffset),
+            
+            addressLabel.centerYAnchor.constraint(
+                equalTo: locationLabel.centerYAnchor),
+            addressLabel.leadingAnchor.constraint(
+                equalTo: locationLabel.trailingAnchor,
+                constant: Constants.horizontalOffset / 2),
+            addressLabel.trailingAnchor.constraint(
+                equalTo: view.trailingAnchor,
+                constant: -Constants.horizontalOffset),
+
+            dateLabel.topAnchor.constraint(
+                equalTo: addressLabel.bottomAnchor,
+                constant: Constants.verticalOffset / 2),
+            dateLabel.leadingAnchor.constraint(
+                equalTo: view.leadingAnchor,
+                constant: Constants.horizontalOffset),
+            
             callButton.bottomAnchor.constraint(
                 equalTo: view.safeAreaLayoutGuide.bottomAnchor,
                 constant: -Constants.verticalOffset),
@@ -176,7 +222,7 @@ final class DetailViewController: UIViewController {
                 constant: -Constants.horizontalOffset),
             
             mapView.topAnchor.constraint(
-                equalTo: descriptionLabel.bottomAnchor,
+                equalTo: dateLabel.bottomAnchor,
                 constant: Constants.verticalOffset),
             mapView.leadingAnchor.constraint(
                 equalTo: view.leadingAnchor,
@@ -194,13 +240,17 @@ final class DetailViewController: UIViewController {
     // MARK: - DetailViewProtocol
 
 extension DetailViewController: DetailViewProtocol {
-    func update(_ image: UIImage?, title: String?, price: String?, description: String?,
-                location: String?, address: String?, date: String?) {
+    func update(_ image: UIImage?, title: String?, price: String?, description: String?, location: String?, address: String?, date: String?) {
         DispatchQueue.main.async {
+            self.activityIndicator.stopAnimating()
             self.detailImageView.image = image
             self.titleLabel.text = title
             self.priceLabel.text = price
             self.descriptionLabel.text = description
+            self.locationLabel.text = location
+            self.addressLabel.text = address
+            self.dateLabel.text = date
+            self.callButton.isEnabled = true
         }
     }
     
