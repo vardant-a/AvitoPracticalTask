@@ -27,8 +27,8 @@ final class DetailViewController: UIViewController {
         return imageView
     }()
 
-    private var priceDetailLabel = StandardLabel(color: ColorSet.acceptColor, fontOfSize: FontSet.targetText, numberOfLines: 2)
-    private var detailTitleLabel = StandardLabel(color: ColorSet.acceptColor, fontOfSize: FontSet.textH1, numberOfLines: 2)
+    private var priceDetailLabel = StandardLabel(color: ColorSet.accept, fontOfSize: FontSet.targetText, numberOfLines: 2)
+    private var detailTitleLabel = StandardLabel(color: ColorSet.accept, fontOfSize: FontSet.textH1, numberOfLines: 2)
 
     // MARK: - Private lazy Properties
     
@@ -58,7 +58,7 @@ final class DetailViewController: UIViewController {
         priceDetailLabel.text = "Price"
         detailTitleLabel.text = "Title"
         detailTitleLabel.numberOfLines = 2
-        view.backgroundColor =  ColorSet.backgroundColor
+        view.backgroundColor =  ColorSet.background
         view.addSubviewsDeactivateAutoMask(
             detailImageView, priceDetailLabel, detailTitleLabel,
             callButton)

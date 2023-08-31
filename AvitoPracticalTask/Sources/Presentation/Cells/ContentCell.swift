@@ -23,16 +23,29 @@ final class ContentCell: UICollectionViewCell {
 
     private var contentImageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.backgroundColor = ColorSet.main
         imageView.clipsToBounds = true
         
         return imageView
     }()
 
     private var contentTitleLabel = StandardLabel(
-        fontOfSize: FontSet.cellH1, numberOfLines: 2)
+        fontOfSize: FontSet.cellH1,
+        numberOfLines: LocalConstants.numberOfLine)
 
     private var priceLabel = StandardLabel(
-        fontOfSize: FontSet.cellH1Bold, numberOfLines: 2)
+        fontOfSize: FontSet.cellTargetText,
+        numberOfLines: LocalConstants.numberOfLine)
+
+    private var addressLabel = StandardLabel(
+        color: ColorSet.second,
+        fontOfSize: FontSet.cellH4,
+        numberOfLines: 1)
+
+    private var dateLabel = StandardLabel(
+        color: ColorSet.second,
+        fontOfSize: FontSet.cellH4,
+        numberOfLines: 1)
 
     // MARK: - Init
 
@@ -40,7 +53,8 @@ final class ContentCell: UICollectionViewCell {
         super.init(frame: frame)
         backgroundColor = .clear
         contentView.addSubviewsDeactivateAutoMask(
-            contentImageView, contentTitleLabel, priceLabel)
+            contentImageView, contentTitleLabel, priceLabel,
+            addressLabel, dateLabel)
         contentImageView.addSubviewsDeactivateAutoMask(activityIndicator)
     }
     
@@ -64,21 +78,13 @@ final class ContentCell: UICollectionViewCell {
 
     // MARK: - Public Methods
 
-    func configure(title: String?, price: String?, imageUrl: String?) {
+    func configure(title: String?, price: String?, address: String?, date: String?, imageUrl: String?) {
         contentTitleLabel.text = title
         priceLabel.text = price
+        addressLabel.text = address
+        dateLabel.text = date
         activityIndicator.startAnimating()
-        Task {
-            guard let stringUrl = imageUrl else { return }
-            let result = await NetworkManager().fetchImage(stringUrl)
-            switch result {
-            case .success(let success):
-                contentImageView.image = UIImage(data: success)
-                activityIndicator.stopAnimating()
-            case .failure(_):
-                contentImageView.backgroundColor = ColorSet.tabBarColor
-            }
-        }
+        getAndSetupImage(by: imageUrl)
     }
     
     // MARK: - Private Methods
@@ -87,7 +93,23 @@ final class ContentCell: UICollectionViewCell {
         contentImageView.image = nil
         contentTitleLabel.text = nil
         priceLabel.text = nil
+        addressLabel.text = nil
+        dateLabel.text = nil
         activityIndicator.startAnimating()
+    }
+
+    private func getAndSetupImage(by imageUrl: String?) {
+        Task {
+            guard let stringUrl = imageUrl else { return }
+            let result = await NetworkManager().fetchImage(stringUrl)
+            switch result {
+            case .success(let success):
+                contentImageView.image = UIImage(data: success)
+                activityIndicator.stopAnimating()
+            case .failure(_):
+                break
+            }
+        }
     }
 
     // MARK: - Layout
@@ -117,13 +139,26 @@ final class ContentCell: UICollectionViewCell {
                 equalTo: contentView.trailingAnchor,
                 constant: -LocalConstants.bigHorizontalOffset),
             contentTitleLabel.heightAnchor.constraint(
-                equalToConstant: 40),
+                equalToConstant: LocalConstants.titleHeight),
+            
             priceLabel.topAnchor.constraint(
                 equalTo: contentTitleLabel.bottomAnchor,
                 constant: LocalConstants.lowVerticalOffset),
             priceLabel.leadingAnchor.constraint(
                 equalTo: contentView.leadingAnchor),
             priceLabel.trailingAnchor.constraint(
+                equalTo: contentView.trailingAnchor),
+            
+            addressLabel.topAnchor.constraint(
+                equalTo: priceLabel.bottomAnchor,
+                constant: LocalConstants.lowVerticalOffset),
+            addressLabel.leadingAnchor.constraint(
+                equalTo: contentView.leadingAnchor),
+            
+            dateLabel.topAnchor.constraint(
+                equalTo: priceLabel.bottomAnchor,
+                constant: LocalConstants.lowVerticalOffset),
+            dateLabel.trailingAnchor.constraint(
                 equalTo: contentView.trailingAnchor)
         ])
     }
@@ -133,6 +168,7 @@ final class ContentCell: UICollectionViewCell {
     private enum LocalConstants {
         static let lowVerticalOffset: CGFloat = 4
         static let bigHorizontalOffset: CGFloat = 30
-        static let numberOfLine: CGFloat = 2
+        static let titleHeight: CGFloat = 40
+        static let numberOfLine = 2
     }
 }

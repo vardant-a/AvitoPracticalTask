@@ -8,7 +8,7 @@
 import UIKit
 
 enum ColorSet {
-    static var tabBarColor = UIColor { trait in
+    static var main = UIColor { trait in
         if trait.userInterfaceStyle == .dark {
             return UIColor(hexString: "#1C1C1E")
         } else {
@@ -16,7 +16,7 @@ enum ColorSet {
         }
     }
 
-    static var backgroundColor = UIColor { trait in
+    static var background = UIColor { trait in
         if trait.userInterfaceStyle == .dark {
             return UIColor.init(hexString: "#000000")
         } else {
@@ -32,11 +32,19 @@ enum ColorSet {
         }
     }
     
-    static var acceptColor = UIColor { trait in
+    static var accept = UIColor { trait in
         if trait.userInterfaceStyle == .dark {
             return UIColor.white
         } else {
             return UIColor.black
+        }
+    }
+
+    static var second = UIColor { trait in
+        if trait.userInterfaceStyle == .dark {
+            return UIColor.darkGray
+        } else {
+            return UIColor.lightGray
         }
     }
 }

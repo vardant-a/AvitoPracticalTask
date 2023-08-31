@@ -62,12 +62,11 @@ final class SearchViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = ColorSet.backgroundColor
+        view.backgroundColor = ColorSet.background
         view.addSubviewsDeactivateAutoMask(contentCollectionView)
         let longPress = UILongPressGestureRecognizer(
             target: self,
-            action: #selector(longPress)
-        )
+            action: #selector(longPress))
         contentCollectionView.addGestureRecognizer(longPress)
         presenter.getContent()
     }
@@ -79,8 +78,8 @@ final class SearchViewController: UIViewController {
     
     // MARK: - @objc Methods
     
-    @objc
-    func longPress(longPressGestureRecognizer: UILongPressGestureRecognizer) {
+    @objc private func longPress(
+        longPressGestureRecognizer: UILongPressGestureRecognizer) {
         switch presenter.loadingStatus {
         case .loading, .notLoaded:
             break
@@ -123,12 +122,10 @@ final class SearchViewController: UIViewController {
 extension SearchViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch presenter.loadingStatus {
-        case .loading:
+        case .loading, .notLoaded:
             return LocalConstants.mockCellCount
         case .loaded:
             return presenter.content.count
-        case .notLoaded:
-            return 4
         }
     }
     
@@ -144,7 +141,12 @@ extension SearchViewController: UICollectionViewDataSource {
                 withReuseIdentifier: ContentCell.cellID,
                 for: indexPath) as? ContentCell else { return UICollectionViewCell() }
             let content = presenter.content[indexPath.row]
-            cell.configure(title: content.title, price:  content.price, imageUrl: content.imageUrl)
+            cell.configure(
+                title: content.title,
+                price:  content.price,
+                address: content.location,
+                date: content.createdDate,
+                imageUrl: content.imageUrl)
             return cell
         }
     }

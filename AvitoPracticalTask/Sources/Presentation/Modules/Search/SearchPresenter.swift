@@ -16,8 +16,8 @@ protocol SearchViewPresenter: AnyObject {
     var content: [Advertisement] { get }
 
     init(networkService: NetworkManager)
-
     func inject(view: SearchViewProtocol?)
+
     func getContent()
     func showAlertAboutItem(_ indexPath: IndexPath)
     func configureDetailView(_ itemId: String)

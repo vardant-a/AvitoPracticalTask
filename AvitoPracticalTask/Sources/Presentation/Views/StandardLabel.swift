@@ -7,16 +7,6 @@
 
 import UIKit
 
-enum FontSet {
-    static let cellH1 = UIFont.systemFont(ofSize: 16)
-    static let cellH1Bold = UIFont.systemFont(ofSize: 15, weight: .black)
-    static let textH1 = UIFont.systemFont(ofSize: 24)
-    static let textH2 = UIFont.systemFont(ofSize: 20, weight: .black)
-    static let textH3 = UIFont.systemFont(ofSize: 18, weight: .bold)
-    static let textH4 = UIFont.systemFont(ofSize: 17)
-    static let targetText = UIFont.systemFont(ofSize: 25, weight: .black)
-}
-
 final class StandardLabel: UILabel {
     
     enum Alignment {
@@ -28,7 +18,7 @@ final class StandardLabel: UILabel {
     
     // MARK: - Init
     
-    convenience init(_ text: String? = nil, color: UIColor = ColorSet.acceptColor,
+    convenience init(_ text: String? = nil, color: UIColor = ColorSet.accept,
                      fontOfSize: UIFont, numberOfLines: Int = 0) {
         self.init(frame: .zero)
         self.text = text

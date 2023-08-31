@@ -31,16 +31,16 @@ final class MainNavigationController: UINavigationController {
     
     private func setupNavBarAppearance() {
         let navBarAppearance = UINavigationBarAppearance()
-        navBarAppearance.backgroundColor = ColorSet.backgroundColor
+        navBarAppearance.backgroundColor = ColorSet.background
         navBarAppearance.shadowColor = .clear
         navBarAppearance.titleTextAttributes = [
-            .foregroundColor: ColorSet.acceptColor]
+            .foregroundColor: ColorSet.accept]
         navBarAppearance.largeTitleTextAttributes = [
-            .foregroundColor: ColorSet.acceptColor]
+            .foregroundColor: ColorSet.accept]
 
         UINavigationBar.appearance().standardAppearance = navBarAppearance
         UINavigationBar.appearance().scrollEdgeAppearance = navBarAppearance
-        UINavigationBar.appearance().tintColor = ColorSet.acceptColor
+        UINavigationBar.appearance().tintColor = ColorSet.accept
         UINavigationBar.appearance().prefersLargeTitles = false
     }
 }

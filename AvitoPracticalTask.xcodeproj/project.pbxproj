@@ -27,6 +27,7 @@
 		0E9DD2842AA0B06A00CBC1B0 /* Localizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9DD2832AA0B06A00CBC1B0 /* Localizable.swift */; };
 		0E9DD2882AA0B0B200CBC1B0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0E9DD28A2AA0B0B200CBC1B0 /* Localizable.strings */; };
 		0E9DD28D2AA0B8EA00CBC1B0 /* UIAlertController+EX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9DD28C2AA0B8EA00CBC1B0 /* UIAlertController+EX.swift */; };
+		0E9DD28F2AA0FFBE00CBC1B0 /* FontSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9DD28E2AA0FFBE00CBC1B0 /* FontSet.swift */; };
 		0EA8F4E12A9B87F70021C4BC /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA8F4E02A9B87F70021C4BC /* MainTabBarController.swift */; };
 		0EFB90142A97719D0010F255 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFB90132A97719D0010F255 /* AppDelegate.swift */; };
 		0EFB90162A97719D0010F255 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFB90152A97719D0010F255 /* SceneDelegate.swift */; };
@@ -62,6 +63,7 @@
 		0E9DD2892AA0B0B200CBC1B0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0E9DD28B2AA0B0B500CBC1B0 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0E9DD28C2AA0B8EA00CBC1B0 /* UIAlertController+EX.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+EX.swift"; sourceTree = "<group>"; };
+		0E9DD28E2AA0FFBE00CBC1B0 /* FontSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontSet.swift; sourceTree = "<group>"; };
 		0EA8F4E02A9B87F70021C4BC /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		0EFB90102A97719D0010F255 /* AvitoPracticalTask.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AvitoPracticalTask.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0EFB90132A97719D0010F255 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -116,6 +118,7 @@
 				0EFB902C2A977B7E0010F255 /* Extensions */,
 				0EFB901E2A97719F0010F255 /* LaunchScreen.storyboard */,
 				0EFB901C2A97719F0010F255 /* Assets.xcassets */,
+				0E9DD28E2AA0FFBE00CBC1B0 /* FontSet.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -352,6 +355,7 @@
 				0E9DD2802AA09E1A00CBC1B0 /* NetworkService.swift in Sources */,
 				0E9DD2842AA0B06A00CBC1B0 /* Localizable.swift in Sources */,
 				0E0EC0E82A9BCB50009E5B3C /* StandardLabel.swift in Sources */,
+				0E9DD28F2AA0FFBE00CBC1B0 /* FontSet.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
