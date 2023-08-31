@@ -42,6 +42,11 @@ final class SearchViewController: UIViewController {
         collectionView.register(
             ContentCell.self,
             forCellWithReuseIdentifier: ContentCell.cellID)
+        collectionView.refreshControl = UIRefreshControl()
+        collectionView.refreshControl?.addTarget(
+            self,
+            action: #selector(update),
+            for: .valueChanged)
         collectionView.backgroundColor = .clear
 
         return collectionView
@@ -77,6 +82,12 @@ final class SearchViewController: UIViewController {
     }
     
     // MARK: - @objc Methods
+    
+    @objc func update() {
+        contentCollectionView.refreshControl?.beginRefreshing()
+        presenter.getContent()
+        contentCollectionView.refreshControl?.endRefreshing()
+    }
     
     @objc private func longPress(
         longPressGestureRecognizer: UILongPressGestureRecognizer) {

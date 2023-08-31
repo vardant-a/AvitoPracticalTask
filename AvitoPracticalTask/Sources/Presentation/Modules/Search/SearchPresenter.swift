@@ -143,6 +143,8 @@ extension SearchPresenter: SearchViewPresenter {
     }
     
     func getContent() {
+        loadingContentStatus = .loading
+        view?.updateContent()
         Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { _ in
             self.fetch()
         }
