@@ -24,7 +24,7 @@
 <img width="375" alt="image" src="https://github.com/vardant-a/AvitoPracticalTask/assets/108525911/79c7053d-2e7e-4fc4-8b12-b57c4d559f46">
 <img width="377" alt="image" src="https://github.com/vardant-a/AvitoPracticalTask/assets/108525911/59ac3544-a99b-4636-99d5-2c210d915fb3">
 
-Во время загрузки изменяется визуальное наполнение ячеек используется SkeletonCell, в момент наполнения изображениями используется ActivityIndicator
+Во время загрузки изменяется визуальное наполнение ячеек используется SkeletonCell, в момент наполнения изображениями используется ActivityIndicator. Для обновления данных таблицы осуществляется свайп коллекции. Данные картинок не хранятся в кэше, так как в рамках задания это указано не было.
 
 <img width="375" alt="image" src="https://github.com/vardant-a/AvitoPracticalTask/assets/108525911/76028292-859d-402b-bac2-2e33c9a059a1">
 
